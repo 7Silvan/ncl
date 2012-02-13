@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : config.xml
+    Created on : 1 лютого 2012, 8:32
+    Author     : Silvan
+    Description:
+        Purpose of the document follows.
+-->
+<!DOCTYPE config SYSTEM "configDTD.dtd">
+<config>
+    <arch type = "single"/>
+    <daogroup choice="xml">
+        <daoxml>
+            <path>.\tasks.xml</path>
+        </daoxml>
+        <daocsv>
+            <path>.\tasks.csv</path>
+        </daocsv>
+        <daodb>
+            <path>192.168.5.2</path>
+            <port>1234</port>
+            <login>machupickchu</login>
+            <pass>superpass</pass>
+        </daodb>
+    </daogroup>
+    <params>
+        <param name="locale">English</param>
+        <param name="postponeMinutes">5</param>
+        <param name="dateFormat">yyyy-MM-dd HH:mm:ss</param>
+    </params>
+</config>

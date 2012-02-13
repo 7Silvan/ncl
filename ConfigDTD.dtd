@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT config (arch, daogroup, params*)>
+
+<!ELEMENT arch EMPTY>
+<!ATTLIST arch
+type (client|server|single) #REQUIRED>
+
+<!--
+<!ELEMENT daogroup (dao*)>
+<!ATTLIST daogroup
+deftype CDATA #REQUIRED>
+
+<!ELEMENT dao (path, type)>
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT type (serial|xml)> 
+-->
+
+<!ELEMENT daogroup (daoxml?, daocsv?, daodb?)>
+<!ATTLIST daogroup
+choice (xml|csv) #REQUIRED>
+
+<!ELEMENT daoxml (path)>
+<!ELEMENT daocsv (path)>
+<!ELEMENT daodb (path, port, login, pass)>
+
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT port (#PCDATA)>
+<!ELEMENT login (#PCDATA)>
+<!ELEMENT pass (#PCDATA)>
+
+
+<!ELEMENT params (param*)>
+<!ELEMENT param (#PCDATA)>
+<!ATTLIST param
+name CDATA #REQUIRED>

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src
+END
+log4j.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/twopals_ncl/!svn/ver/19/Task%20Manager/src/log4j.dtd
+END
+log4j.properties
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/twopals_ncl/!svn/ver/19/Task%20Manager/src/log4j.properties
+END
+log4j.xml
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/twopals_ncl/!svn/ver/19/Task%20Manager/src/log4j.xml
+END

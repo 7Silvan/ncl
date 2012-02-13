@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view
+END
+MainView.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/MainView.java
+END
+TaskAbstractView.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TaskAbstractView.java
+END
+DateValidator.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/twopals_ncl/!svn/ver/31/Task%20Manager/src/ua/group42/taskmanager/view/DateValidator.java
+END
+TaskSwingView.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/twopals_ncl/!svn/ver/43/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingView.java
+END
+TaskViewFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TaskViewFactory.java
+END
+TaskSwingEditView.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingEditView.java
+END
+TypeView.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TypeView.java
+END
+TaskView.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TaskView.java
+END
+SysTray.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/SysTray.java
+END
+TaskSwingAddView.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingAddView.java
+END
+TaskSwingNotifyView.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingNotifyView.java
+END
