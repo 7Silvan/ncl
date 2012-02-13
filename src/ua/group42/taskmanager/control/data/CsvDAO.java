@@ -43,15 +43,15 @@ public final class CsvDAO implements TaskDAO {
             table.setValue(row, "contacts", task.getContacts());
             table.setValue(row, "date", task.getStringDate());
 
-            out = new PrintStream(config.getFileName());
+            out = new PrintStream(config.getFileName());            
             table.writeTo(out);
-            out.close();
 
         } catch (IOException ex) {
             log.error(null, ex);
             throw new WritingFileException("Didn't write xml", ex.getCause());
         } finally {
             if (out != null) {
+                out.flush();
                 out.close();
             }
         }
@@ -85,6 +85,7 @@ public final class CsvDAO implements TaskDAO {
             throw new WritingFileException("Didn't write xml", ex.getCause());
         } finally {
             if (out != null) {
+                out.flush();
                 out.close();
             }
         }
@@ -111,6 +112,8 @@ public final class CsvDAO implements TaskDAO {
 
 
                 Task task = new Task(name, description, contact, sdf.parse(date));
+                
+                loadedTasks.add(task);
             }
         } catch (ParseException ex) {
             log.error("Error in xml parsing.");

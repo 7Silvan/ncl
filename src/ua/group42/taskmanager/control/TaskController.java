@@ -131,7 +131,7 @@ public class TaskController implements ControllerIface {
             try {
                 watchList = dao.loadTasks();
             } catch (IOException ex) {
-                // TODO: resolve
+                throw new RuntimeException("Error with loading tasks.");
             }
         }
         return (Task[]) watchList.toArray(new Task[watchList.size()]);
@@ -143,7 +143,7 @@ public class TaskController implements ControllerIface {
         try {
             dao.saveAllTasks(watchList);
         } catch (IOException ex) {
-            // TODO: resolve
+            throw new RuntimeException("Error with saving tasks after removing.");
         }
         if (!remove) log.error("didn't remove");
         updated();
