@@ -1,6 +1,5 @@
 package ua.group42.taskmanager.control.data;
 
-import java.io.IOException;
 import java.util.Collection;
 import ua.group42.taskmanager.model.Task;
 
@@ -10,9 +9,9 @@ import ua.group42.taskmanager.model.Task;
  */
 public interface TaskDAO {    
     
-    Collection<Task> loadTasks() throws IOException;
+    Collection<Task> loadTasks();
     
-    void saveTask(Task task) throws IOException;
+    void saveTask(Task task);
     
-    void saveAllTasks(Collection<Task> tasks) throws IOException;
+    void saveAllTasks(Collection<Task> tasks);
 }

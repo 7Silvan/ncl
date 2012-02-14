@@ -10,9 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
-import ua.group42.taskmanager.control.InvalidTaskException;
 import ua.group42.taskmanager.model.*;
 import org.apache.log4j.*;
+import ua.group42.taskmanager.model.InternalControllerException;
 import ua.group42.taskmanager.view.TypeView;
 
 /**
@@ -45,7 +45,10 @@ public class TaskSwingNotifyView extends TaskAbstractView {
                             .addPostponedTask(taskForNotify);
                     TaskSwingView.getInstance().closeView(TaskSwingNotifyView.this);
                 } catch (InvalidTaskException ex) {
-                    showError(ex.getMessage());
+                    log.error("Invalid Task Params", ex);
+                    showError("Invalid Task Params" + ex.getMessage());
+                } catch (InternalControllerException ex) {
+                    showError("Controller unhandled error: " + ex.getMessage());
                 }
             }
         });
@@ -77,7 +80,7 @@ public class TaskSwingNotifyView extends TaskAbstractView {
     }
 
     public TaskSwingNotifyView(Task task) {
-        //null?
+        
         super(TypeView.notify);
 
         taskForNotify = task;

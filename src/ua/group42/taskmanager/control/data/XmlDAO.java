@@ -13,6 +13,7 @@ import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import ua.group42.taskmanager.model.InternalControllerException;
 import ua.group42.taskmanager.model.Task;
 import ua.group42.taskmanager.model.TaskComparator;
 import ua.group42.taskmanager.tools.*;
@@ -25,14 +26,12 @@ import ua.group42.taskmanager.tools.*;
 public final class XmlDAO implements TaskDAO {
 
     private static final Logger log = Logger.getLogger(XmlDAO.class);
-    private Collection<Task> tasks;
     private final TaskComparator taskComparator = new TaskComparator();
     private ConfigReader config;
     private Document doc;
 
     public XmlDAO(ConfigReader confReader) throws IOException, InvalidFileException {
         config = confReader;
-        tasks = loadTasks();
     }
 
     @Override
@@ -48,7 +47,7 @@ public final class XmlDAO implements TaskDAO {
                     .addContent(new Element("description").addContent(task.getDescription()))
                     .addContent(new Element("contacts").addContent(task.getContacts()))
                     .addContent(new Element("date").addContent(task.getStringDate()))
-                    );
+         );
          
          XMLOutputter outPutter = new XMLOutputter(Format.getRawFormat().setIndent(" ").setLineSeparator("\n"));
          
@@ -61,8 +60,8 @@ public final class XmlDAO implements TaskDAO {
     }
 
     @Override
-    public synchronized void saveAllTasks(Collection<Task> tasks) {
-//TODO: make it with JDOM
+    public  void saveAllTasks(Collection<Task> tasks) {
+
         try {
                 doc = new Document(new Element("tasks"), new DocType("tasks", "XmlDTD.dtd"));
 
@@ -88,9 +87,9 @@ public final class XmlDAO implements TaskDAO {
     }
 
     @Override
-    public Collection<Task> loadTasks() throws IOException, InvalidFileException {
-        // TODO: exist? -> save new 
+    public Collection<Task> loadTasks()  {
         Collection<Task> loadedTasks = null;
+        try {
         Boolean valid = Tools.valXML(config.getFileName());
         if (valid) {
             try {
@@ -126,6 +125,10 @@ public final class XmlDAO implements TaskDAO {
         } else {
             log.info("XML File is not valid. Check it.");
             throw new InvalidFileException("XML File is not valid. Check it.");
+        }
+        } catch (Exception ex) {
+            log.error("Tasks wasn't loaded, IO or XML errors occured",ex);
+            throw new InternalControllerException("Tasks wasn't loaded, IO or XML errors occured",ex);
         }
         return loadedTasks;
     }

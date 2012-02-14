@@ -1,18 +1,15 @@
 package ua.group42.taskmanager.control;
 
-import java.io.File;
-import java.io.IOException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import ua.group42.taskmanager.model.InternalControllerException;
+import org.jdom.*;
+import java.util.List;
 import org.apache.log4j.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import org.jdom.input.SAXBuilder;
+
 import ua.group42.taskmanager.tools.Tools;
 import ua.group42.taskmanager.control.Config.*;
+
+import java.io.IOException;
 
 /**
  * Main Configurator, reads and accepts params from the fileOfConfig.
@@ -27,6 +24,7 @@ public class ConfigReader {
     private static final Logger log = Logger.getLogger(ConfigReader.class);
     private static ConfigReader instance = null;
     private static Config config = null;
+    private Document doc;
 
     public static ConfigReader getInstance() {
         if (instance == null) {
@@ -43,81 +41,62 @@ public class ConfigReader {
         if (valid) {
             config = new Config();
             try {
-                File file = new File(configFileName);
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                Document doc = db.parse(file);
-                doc.getDocumentElement().normalize();
-
-                NodeList arch = doc.getElementsByTagName("arch");
-
-                String archS = arch.item(0).getAttributes().getNamedItem("type").getNodeValue();
-                config.setArchitecture(Config.Architecture.valueOf(archS.toUpperCase()));
-
-                NodeList daoGroup = doc.getElementsByTagName("daogroup");
-
-                String choice = daoGroup.item(0).getAttributes().getNamedItem("choice").getNodeValue();
-                config.setChoice(ResType.valueOf(choice.toUpperCase()));
-
-                NodeList daos = daoGroup.item(0).getChildNodes();
-                for (int i = 0; i < daos.getLength(); i++) {
-                    if (daos.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                        String name = daos.item(i).getNodeName();
-                        if ("daoxml".equals(name)) {
-                            String path = ((Element)daos.item(i)).getElementsByTagName("path").item(0).getTextContent();
-                            
-                            config.setDaoXmlSets(path);
-                        }
-                        if ("daocsv".equals(name)) {
-                            String path = ((Element)daos.item(i)).getElementsByTagName("path").item(0).getTextContent();
-                            config.setDaoCsvSets(path);
-                        }
-                        if ("daodb".equals(name)) {
-                            Element dbParams = (Element) daos.item(i);
-                            String path = dbParams.getElementsByTagName("path").item(0).getTextContent();
-                            String port = dbParams.getElementsByTagName("port").item(0).getTextContent();
-                            String login = dbParams.getElementsByTagName("login").item(0).getTextContent();
-                            String pass = dbParams.getElementsByTagName("pass").item(0).getTextContent();
-                            config.setDaoDataBaseSets(path, port, login, pass);
-                        }
-                    }
+                
+                SAXBuilder builder = new SAXBuilder();
+                doc = builder.build(configFileName);
+                
+                Element rootElement = doc.getRootElement();
+                config.setArchitecture(Config.Architecture.valueOf(rootElement.getChild("arch").getAttributeValue("type").toUpperCase()));
+                
+                Element dao = rootElement.getChild("dao");
+                config.setDaoSets(dao.getChildText("class"),
+                        dao.getChildText("path"));
+                
+                List<Element> params = rootElement.getChild("params").getChildren();
+                for (Element param : params) {
+                    config.addParam(param.getAttributeValue("name"), 
+                            param.getText());
                 }
 
-                NodeList params = doc.getElementsByTagName("param");
-                for (int k = 0; k < params.getLength(); k++) {
-                    Element param = (Element) params.item(k);
-                    config.addParam(param.getAttributes().getNamedItem("name").getNodeValue(),
-                            param.getFirstChild().getNodeValue());
-                }
-
-            } catch (ParserConfigurationException ex) {
-                log.error(null, ex);
-            } catch (SAXException ex) {
-                log.error(null, ex);
-//            } catch (IOException ex) {
-//                log.error(null, ex);
-//            } catch (BadConfigException ex) {
-//                log.error(null, ex);
+            
+            } catch (JDOMException ex) {
+                log.error("XML parsing error", ex);
+                throw new InternalControllerException("XML parsing error", ex);
+            } catch (IOException ex) {
+                log.error("File IO operating error", ex);
+                throw new InternalControllerException("File IO operating error", ex);
+            } catch (BadConfigException ex) {
+                log.error("Config data invalidness", ex);
+                throw new InternalControllerException("Config data invalidness", ex);
             }
         }
     }
 
-    public ResType getResourcesType() {
+    public String getDaoClassName() {
         if (config == null) {
-            throw new UnsupportedOperationException("ConfigFile wasn't read yet.");
+            throw new IllegalAccessError("ConfigFile wasn't read yet.");
         }
-        return config.getChoice();
+        
+        String className = null;
+        try {
+            className = config.getClassName();
+        } catch (BadConfigException ex){
+            log.error("Errors with extracting params from config", ex);
+            throw new InternalControllerException("Errors with extracting params from config", ex);
+        }
+        return className;
     }
-
+    
     public String getFileName() {
         if (config == null) {
-            throw new UnsupportedOperationException("ConfigFile wasn't read yet.");
+            throw new IllegalAccessError("ConfigFile wasn't read yet.");
         }
         String path = null;
         try {
             path = config.getPath();
         } catch (BadConfigException ex) {
-            log.error(null, ex);
+            log.error("Errors with extracting params from config", ex);
+            throw new InternalControllerException("Errors with extracting params from config", ex);
         }
         return path;
     }
@@ -140,10 +119,5 @@ public class ConfigReader {
     public String getDateFormat() {
         String value = config.getParam(DATE_FORMAT_NAME);
         return (value == null? DEFAULT_DATE_FORMAT : value);
-    }
-
-    public static enum ResType {
-
-        DB, CSV, XML
     }
 }

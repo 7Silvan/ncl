@@ -10,20 +10,27 @@
 <!DOCTYPE config SYSTEM "configDTD.dtd">
 <config>
     <arch type = "single"/>
-    <daogroup choice="xml">
+    <dao>
+        <class>ua.group42.taskmanager.control.data.XmlDAO</class>
+        <path>.\tasks.xml</path>
+    </dao>
+<!--    <daogroup choice="xml">
         <daoxml>
+            <class>ua.group42.taskmanager.control.data.XmlDAO</class>
             <path>.\tasks.xml</path>
         </daoxml>
         <daocsv>
+            <class>ua.group42.taskmanager.control.data.CsvDAO</class>
             <path>.\tasks.csv</path>
         </daocsv>
         <daodb>
+            <class>nothing.right.now</class>
             <path>192.168.5.2</path>
             <port>1234</port>
             <login>machupickchu</login>
             <pass>superpass</pass>
         </daodb>
-    </daogroup>
+    </daogroup> -->
     <params>
         <param name="locale">English</param>
         <param name="postponeMinutes">5</param>

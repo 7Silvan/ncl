@@ -25,7 +25,7 @@ TaskSwingView.java
 K 25
 svn:wc:ra_dav:version-url
 V 94
-/svn/twopals_ncl/!svn/ver/43/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingView.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingView.java
 END
 TaskViewFactory.java
 K 25
@@ -37,7 +37,7 @@ TaskSwingEditView.java
 K 25
 svn:wc:ra_dav:version-url
 V 98
-/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingEditView.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingEditView.java
 END
 TypeView.java
 K 25
@@ -55,17 +55,17 @@ SysTray.java
 K 25
 svn:wc:ra_dav:version-url
 V 88
-/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/SysTray.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/view/SysTray.java
 END
 TaskSwingAddView.java
 K 25
 svn:wc:ra_dav:version-url
 V 97
-/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingAddView.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingAddView.java
 END
 TaskSwingNotifyView.java
 K 25
 svn:wc:ra_dav:version-url
 V 100
-/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingNotifyView.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/view/TaskSwingNotifyView.java
 END

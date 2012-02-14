@@ -78,6 +78,19 @@ public class Task implements Serializable, Comparable {
     public String getDescription() {
         return description;
     }
+    
+    @Override
+    public String toString() {
+        return new StringBuilder("Name: ")
+                .append(name)
+                .append(" Desc.: ")
+                .append(description)
+                .append(" Cont.: ")
+                .append(contacts)
+                .append(" Date: ")
+                .append(getStringDate())
+                .toString();
+    }
 
     @Override
     public int compareTo(Object t) {

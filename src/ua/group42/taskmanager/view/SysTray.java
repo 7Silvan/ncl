@@ -31,6 +31,7 @@ public class SysTray implements SysTrayMenuListener {
         Command com = Command.valueOf(stme.getActionCommand());
         switch (com) {
             case exit:
+                listener.getControl().stopService();
                 System.exit(0);
             case about:
                 JOptionPane.showMessageDialog(null, "TaskManager made by group42 as lab for NetCracker Course. \n"

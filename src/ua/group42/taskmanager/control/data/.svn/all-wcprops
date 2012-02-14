@@ -7,19 +7,25 @@ CsvDAO.java
 K 25
 svn:wc:ra_dav:version-url
 V 95
-/svn/twopals_ncl/!svn/ver/43/Task%20Manager/src/ua/group42/taskmanager/control/data/CsvDAO.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/data/CsvDAO.java
 END
 NewClass.java
 K 25
 svn:wc:ra_dav:version-url
 V 97
-/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/control/data/NewClass.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/data/NewClass.java
+END
+WritingFileException.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/data/WritingFileException.java
 END
 XmlDAO.java
 K 25
 svn:wc:ra_dav:version-url
 V 95
-/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/control/data/XmlDAO.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/data/XmlDAO.java
 END
 InvalidFileException.java
 K 25
@@ -31,5 +37,5 @@ TaskDAO.java
 K 25
 svn:wc:ra_dav:version-url
 V 96
-/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/control/data/TaskDAO.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/data/TaskDAO.java
 END

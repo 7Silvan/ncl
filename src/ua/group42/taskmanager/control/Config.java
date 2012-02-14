@@ -2,7 +2,6 @@ package ua.group42.taskmanager.control;
 
 import java.util.HashMap;
 import java.util.Map;
-import ua.group42.taskmanager.control.ConfigReader.ResType;
 import org.apache.log4j.*;
 
 /**
@@ -23,18 +22,25 @@ class Config {
     
     Map<String, String> paramList = new HashMap<String, String>();
 
-    abstract class DaoSets {
+    public class DaoSets {
 
         /**
          * Constructing DAO setting with params
          * @param path of DAO File
          */
-        DaoSets(String path) throws BadConfigException {
-            if (path == null) {
+        DaoSets(String className, String path) throws BadConfigException {
+            if (className == null || path == null) {
                 throw new BadConfigException("null path");
             }
+            this.className = className;
             this.path = path;
         }
+
+        /**
+         * ClassName of DAO
+         */
+        private String className;
+        
         /**
          * Path of DAO File
          */
@@ -48,54 +54,20 @@ class Config {
         public String getPath() {
             return path;
         }
-    }
-
-    /**
-     * Class in charge of DAO XML Setting Group 
-     * DaoXmlSets is acronym
-     */
-    public class DaoXmlSets extends DaoSets {
-
-        public DaoXmlSets(String path) throws BadConfigException {
-            super(path);
+        
+        /**
+         * Get the value of DAO's  ClassName
+         *
+         * @return the value of DAO's ClassName
+         */
+        public String getClassName() {
+            return className;
         }
     }
-
-    /**
-     * Class in charge of DAO Serialization Setting Group
-     * DaoCsvSets is acronym
-     */
-    public class DaoCsvSets extends DaoSets {
-
-        public DaoCsvSets(String path) throws BadConfigException {
-            super(path);
-        }
-    }
-
-    /**
-     * Class in charge of DAO Data Base Settings Group
-     * DaoCsvSets is acronym
-     */
-    public class DaoDataBaseSets extends DaoSets {
-
-        private final String port;
-        private final String login;
-        private final String pass;
-
-        public DaoDataBaseSets(String path, String port, String login, String pass) throws BadConfigException {
-            super(path);
-            this.port = port;
-            this.login = login;
-            this.pass = pass;
-        }
-    }
-    /**
-     * 
-     */
-    DaoDataBaseSets ddbs;
 
     public Config() {
     }
+    
     /**
      * Setting in charge of type of app behavior
      */
@@ -118,136 +90,55 @@ class Config {
     Architecture getArchitecture() {
         return arch;
     }
-    /**
-     * Setting in charge of choice of DAO uses in app
-     */
-    private ResType choice;
 
     /**
-     * Get the value of choice
+     * Object of DAO Sets
+     */
+    DaoSets ds;
+
+    /**
+     * Get the  DAO Sets
      *
-     * @return the value of choice
+     * @return the DAO Sets
      */
-    ResType getChoice() {
-        return choice;
+    private DaoSets getDaoSets() {
+        return ds;
     }
 
     /**
-     * Set the value of choice with ResType value
+     * Set the DAO Sets
      *
-     * @param choice new value of choice (ResType)
+     * @param path parametr of the DAO Sets
      */
-    void setChoice(ResType choice) {
-        this.choice = choice;
+    void setDaoSets(String className, String path) throws BadConfigException {
+        this.ds = new DaoSets(className, path);
     }
-
+    
     /**
-     * Set the value of choice with String value
-     * (for example when reading from config file)
-     * @param choice new value of choice (String)
+     * Big shot of our DAO Sets, it desrvers a method :)
+     * @return path to file for our DAO
+     * @throws BadConfigException if errors in init DAO Sets or params occured
      */
-    void setChoice(String choice) {
-        this.choice = ResType.valueOf(choice);
-    }
-    /**
-     * Object of DAO Data Base Settings 
-     */
-    DaoCsvSets dcs;
-
-    /**
-     * Get the value of DAO Data Base Settings 
-     *
-     * @return the value of DAO Data Base Settings 
-     */
-    private DaoDataBaseSets getDaoDataBaseSets() {
-        return ddbs;
-    }
-
-    /**
-     * Set the value of dao of XML
-     *
-     * @param dxs dao of XML
-     */
-    void setDaoDataBaseSets(String path, String port, String login, String pass) throws BadConfigException {
-        this.ddbs = new DaoDataBaseSets(path, port, login, pass);
-    }
-
-    /**
-     * Get the value of dcs
-     *
-     * @return the value of dcs
-     */
-    private DaoCsvSets getDaoCsvSets() {
-        return dcs;
-    }
-    /**
-     * Object of DAO XML Sets
-     */
-    DaoXmlSets dxs;
-
-    /**
-     * Get the value of dxs
-     *
-     * @return the value of dxs
-     */
-    private DaoXmlSets getDaoXmlSets() {
-        return dxs;
-    }
-
-    /**
-     * Set the value of dao of XML
-     *
-     * @param dxs dao of XML
-     */
-    void setDaoXmlSets(String path) throws BadConfigException {
-        this.dxs = new DaoXmlSets(path);
-    }
-
-    /**
-     * Set the value of dao of Serialization
-     *
-     * @param dxs dao of Serialization
-     */
-    void setDaoCsvSets(String path) throws BadConfigException {
-        this.dcs = new DaoCsvSets(path);
-    }
-
-    // TODO: guarantyy the proper constructing of Config
     String getPath() throws BadConfigException {
-        switch (choice) {
-            case CSV:
-                // TODO: move this logic to constructing of config
-//                if (getDaoCsvSets() == null) {
-//                    log.error(
-//                            new BadConfigException("Wrong choice or lack of config settings"));
-//                }
-                return getDaoCsvSets().getPath();
-            case XML:
-                return getDaoXmlSets().getPath();
-            default:
-                throw new BadConfigException("Choice Assertion error");
-        }
+        return getDaoSets().getPath();
+    }
+    
+    /**
+     * Big shot of our DAO Sets, it desrvers a method :)
+     * @return path to file for our DAO
+     * @throws BadConfigException if errors in init DAO Sets or params occured
+     */
+    String getClassName() throws BadConfigException {
+        return getDaoSets().getClassName();
     }
 
     /**
-     * Validates if config constructed in a proper way
+     * Validates if DAO Sets not null, potentially could validate more things
      */
     boolean validate() throws BadConfigException {
-        switch (choice) {
-            case CSV:
-                if (getDaoCsvSets() == null) {
-                    return false;
-                }
-                break;
-            case XML:
-                if (getDaoXmlSets() == null) {
-                    return false;
-                }
-                break;
-            default:
-                throw new BadConfigException("Choice Assertion error");
-        }
-        return true;
+        return (getDaoSets() == null 
+              ||getDaoSets().getClassName() == null
+              ||getDaoSets().getPath() == null)? false : true ;
     }
 
     /**

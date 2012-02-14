@@ -1,9 +1,8 @@
 package ua.group42.taskmanager.control;
 
-import java.io.IOException;
+import ua.group42.taskmanager.model.InternalControllerException;
 import java.lang.reflect.Constructor;
 import org.apache.log4j.*;
-import ua.group42.taskmanager.control.ConfigReader.ResType;
 import ua.group42.taskmanager.control.data.TaskDAO;
 
 /**
@@ -21,29 +20,16 @@ public class DAOFactory {
      * @throws BadConfigException if error with choice occured 
      * (#see ua.group42.taskmanager.control.ConfigReader.ResType)
      */
-    static TaskDAO getDAO(ConfigReader confReader) throws BadConfigException, IOException {
+    static TaskDAO getDAO(ConfigReader confReader) throws BadConfigException {
 
         try {
-            ResType resType = confReader.getResourcesType();
-            // TODO: make reflection here
-            switch (resType) {
-                case CSV:
-                    Class csv = Class.forName("ua.group42.taskmanager.control.data.CsvDAO");
-                    Constructor csvConstr = csv.getConstructor(ConfigReader.class);
-                    TaskDAO daoCsv = (TaskDAO) csvConstr.newInstance(confReader);
-                    return daoCsv;
-                case XML:
-                    Class xml = Class.forName("ua.group42.taskmanager.control.data.XmlDAO");
-                    Constructor xmlConstr = xml.getConstructor(ConfigReader.class);
-                    TaskDAO daoXml = (TaskDAO) xmlConstr.newInstance(confReader);
-                    return daoXml;
-                case DB:
-                default:
-                    throw new BadConfigException(confReader);
-            }
+            Class daoClass = Class.forName(confReader.getDaoClassName());
+            Constructor daoConstruct = daoClass.getConstructor(ConfigReader.class);
+            TaskDAO dao = (TaskDAO) daoConstruct.newInstance(confReader);
+            return dao;
         } catch (Exception ex) {
-            log.fatal("Error in DAO Factory occured", ex);
-            throw new RuntimeException("Error in DAO Factory occured", ex);
+            log.fatal("Error DAO Initializing  occured", ex);
+            throw new InternalControllerException("Error DAO Initializing occured", ex.getCause());
         }
     }
 }

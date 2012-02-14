@@ -19,6 +19,7 @@ import javax.swing.table.TableColumnModel;
 import org.apache.log4j.*;
 import ua.group42.taskmanager.control.ConfigReader;
 import ua.group42.taskmanager.control.ControllerIface;
+import ua.group42.taskmanager.model.InternalControllerException;
 import ua.group42.taskmanager.model.*;
 
 /**
@@ -114,11 +115,15 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (getSelectedTaskID() > -1) {
-                    getControl().removeTask(getSelectedTask());
-                } else {
-                    showError("Removing: no task selected");
-                    log.info("Removing: no task selected");
+                try {
+                    if (getSelectedTaskID() > -1) {
+                        getControl().removeTask(getSelectedTask());
+                    } else {
+                        showError("Removing: no task selected");
+                        log.info("Removing: no task selected");
+                    }
+                } catch (InternalControllerException ex) {
+                    showError("Controller Error: " + ex.getMessage());
                 }
 
             }
@@ -134,12 +139,16 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (getSelectedTaskID() > -1) {
-                    Task task = getSelectedTask();
-                    createView(TypeView.edit, task).show();
-                } else {
-                    showError("Editing: no task selected");
-                    log.info("Editing: no task selected");
+                try {
+                    if (getSelectedTaskID() > -1) {
+                        Task task = getSelectedTask();
+                        createView(TypeView.edit, task).show();
+                    } else {
+                        showError("Editing: no task selected");
+                        log.info("Editing: no task selected");
+                    }
+                } catch (InternalControllerException ex) {
+                    showError("Controller Error: " + ex.getMessage());
                 }
             }
         });
@@ -179,9 +188,9 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
         String stringDateFormat = ConfigReader.getInstance().getDateFormat();
         SimpleDateFormat format = new SimpleDateFormat(stringDateFormat, Locale.US);
 
-        Task[] linkedList = getControl().getTasks();
+        Collection<Task> taskList = getControl().getTasks();
 
-        for (Task tTask : linkedList) {
+        for (Task tTask : taskList) {
             tModel.addRow(new String[]{tTask.getName(),
                         tTask.getDescription(),
                         tTask.getContacts(),
@@ -223,29 +232,6 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
 
             return null;
         }
-    }
-
-    public List<Task> toList() {
-        List<Task> taskList = new LinkedList<Task>();
-        synchronized (table) {
-            for (int j = 0; j < table.getRowCount(); j++) {
-
-                LinkedList<String> list = new LinkedList<String>();
-                for (int i = 0; i < table.getColumnCount(); i++) {
-                    list.add((String) table.getValueAt(j, i));
-                }
-                String stringDateFormat = ConfigReader.getInstance().getDateFormat();
-                SimpleDateFormat format = new SimpleDateFormat(stringDateFormat, Locale.US);
-                Date date = null;
-                try {
-                    date = format.parse(list.get(3));
-                } catch (Exception e) {
-                }
-                Task task = new Task(list.get(0), list.get(1), list.get(2), date);
-                taskList.add(task);
-            }
-        }
-        return taskList;
     }
 
     /**
@@ -292,7 +278,7 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
     @Override
     public ControllerIface getControl() {
         if (controller == null) {
-            throw new RuntimeException("No Controller registered.");
+            throw new IllegalAccessError("No Controller registered.");
         }
         return controller;
     }

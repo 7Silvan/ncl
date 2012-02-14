@@ -1,6 +1,5 @@
 package ua.group42.taskmanager.control.data;
 
-import ua.group42.taskmanager.tools.WritingFileException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.text.ParseException;
@@ -10,6 +9,7 @@ import java.util.Iterator;
 import java.util.TreeSet;
 import ua.group42.taskmanager.control.ConfigReader;
 import org.apache.log4j.*;
+import ua.group42.taskmanager.model.InternalControllerException;
 import ua.group42.taskmanager.model.Task;
 import ua.group42.taskmanager.model.TaskComparator;
 import ua.group42.taskmanager.tools.CSVTable;
@@ -50,9 +50,14 @@ public final class CsvDAO implements TaskDAO {
             log.error(null, ex);
             throw new WritingFileException("Didn't write xml", ex.getCause());
         } finally {
+             try {
             if (out != null) {
                 out.flush();
                 out.close();
+            }
+            } catch (Exception ex) {
+                log.error("Can't close stream of " + config.getFileName());
+                throw new InternalControllerException("Closing File Error.", ex);
             }
         }
     }
@@ -78,21 +83,25 @@ public final class CsvDAO implements TaskDAO {
 
             out = new PrintStream(config.getFileName());
             table.writeTo(out);
-            out.close();
 
         } catch (IOException ex) {
             log.error(null, ex);
             throw new WritingFileException("Didn't write xml", ex.getCause());
         } finally {
+            try {
             if (out != null) {
                 out.flush();
                 out.close();
+            }
+            } catch (Exception ex) {
+                log.error("Can't close stream of " + config.getFileName());
+                throw new InternalControllerException("Closing File Error.", ex);
             }
         }
     }
 
     @Override
-    public Collection<Task> loadTasks() throws IOException {
+    public Collection<Task> loadTasks() {
         
         Collection<Task> loadedTasks = null;
 
@@ -116,8 +125,8 @@ public final class CsvDAO implements TaskDAO {
                 loadedTasks.add(task);
             }
         } catch (ParseException ex) {
-            log.error("Error in xml parsing.");
-            throw new IOException("Error in xml parsing.", ex);
+            log.error("Error in data string parsing.");
+            throw new InternalControllerException("Error in data string parsing.", ex);
         }
         return loadedTasks;
     }

@@ -15,15 +15,9 @@ svn:wc:ra_dav:version-url
 V 100
 /svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/tools/SimpleErrorHandler.java
 END
-WritingFileException.java
-K 25
-svn:wc:ra_dav:version-url
-V 102
-/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/tools/WritingFileException.java
-END
 CSVTable.java
 K 25
 svn:wc:ra_dav:version-url
 V 90
-/svn/twopals_ncl/!svn/ver/43/Task%20Manager/src/ua/group42/taskmanager/tools/CSVTable.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/tools/CSVTable.java
 END

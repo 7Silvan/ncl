@@ -8,7 +8,8 @@ import java.awt.event.WindowEvent;
 import java.util.Calendar;
 import org.apache.log4j.*;
 import javax.swing.*;
-import ua.group42.taskmanager.control.InvalidTaskException;
+import ua.group42.taskmanager.model.InternalControllerException;
+import ua.group42.taskmanager.model.InvalidTaskException;
 
 /**
  *
@@ -53,13 +54,15 @@ public class TaskSwingAddView extends TaskAbstractView {
                             conctField.getText(),
                             dateField.getText());
                     TaskSwingView.getInstance().closeView(TaskSwingAddView.this);
-                    log.debug("added new Task with name :" 
+                    log.info("added new Task with name :" 
                             + nameField.getText() 
                             + " and will rise at : " 
                             + dateField.getText());
                 } catch (InvalidTaskException ex) {
                     log.error("Invalid Task Params", ex);
-                    showError(ex.getMessage());
+                    showError("Invalid Task Params" + ex.getMessage());
+                } catch (InternalControllerException ex) {
+                    showError("Controller unhandled error: " + ex.getMessage());
                 }
             }
         });

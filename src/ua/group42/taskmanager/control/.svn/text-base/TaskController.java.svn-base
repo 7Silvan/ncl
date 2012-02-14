@@ -1,7 +1,6 @@
 package ua.group42.taskmanager.control;
 
 import java.util.*;
-import java.awt.event.*;
 import org.apache.log4j.*;
 import java.io.IOException;
 import java.text.ParseException;
@@ -26,13 +25,17 @@ public class TaskController implements ControllerIface {
      */
     private static TaskController instance = null;
     /**
+     * Instance of Ticker of TaskController (@see DaemonTicker)
+     */
+    private Ticker tickerInstance;
+    /**
      * List for listeners that will listen for events, Conquer and Command ))
      */
-    private LinkedList listeners = new LinkedList();
+    private List<Listener> listeners = new LinkedList<Listener>();
     /**
      * List of tasks for checking on
      */
-    private static Collection<Task> watchList;
+    private Collection<Task> watchList;
     /**
      * private TaskFolderModel model;
      */
@@ -55,27 +58,25 @@ public class TaskController implements ControllerIface {
         //throwing task on watching
         temp.setDate(c.getTime());
 
-
-        try {
-            boolean add = watchList.add(temp);
-
+            boolean add;
+            synchronized (watchList) {
+                add = watchList.add(temp);
+            }
             if (!add) {
                 log.error("Task date is not unique.");
                 throw new InvalidTaskException("Task date is not unique.");
             }
             
             dao.saveTask(temp);
-            
-        } catch (IOException ex) {
-            // TODO: resolve
-        }
         updated();
     }
 
     @Override
-    public void addTask(Task task) throws InvalidTaskException {
-        try {
-            boolean add = watchList.add(task);
+    public void addTask(Task task) {
+            boolean add;
+            synchronized (watchList) {
+                add = watchList.add(task);
+            }
 
             if (!add) {
                 log.error("Task date is not unique.");
@@ -83,10 +84,6 @@ public class TaskController implements ControllerIface {
             }
             
             dao.saveTask(task);
-        } catch (IOException ex) {
-            // TODO: resolve
-        }
-
         updated();
     }
 
@@ -104,47 +101,27 @@ public class TaskController implements ControllerIface {
     }
 
     @Override
-    public void editTask(Task was, Task become) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Deprecated
-    public void removeTask(int id) {
-        if (watchList instanceof List) {
-            Task remove = (Task) ((List) watchList).remove(id);
-            try {
-                dao.saveAllTasks(watchList);
-            } catch (IOException ex) {
-                // TODO: resolve
-            }
-            log.info("Task under index " + id + " removed : " + remove.toString());
-            updated();
-        } else {
-            log.fatal("Cannot use id's for operating with tasks");
-            throw new RuntimeException("Internal Program Error");
-        }
+    public void editTask(Task was, Task become) throws InvalidTaskException {
+        removeTask(was);
+        addTask(become);
     }
 
     @Override
-    public Task[] getTasks() {
+    public Collection<Task> getTasks() {
         if (watchList == null) {
-            try {
                 watchList = dao.loadTasks();
-            } catch (IOException ex) {
-                // TODO: resolve
-            }
         }
-        return (Task[]) watchList.toArray(new Task[watchList.size()]);
+        return Collections.unmodifiableCollection(watchList);
     }
 
     @Override
     public void removeTask(Task task) {
-        boolean remove = watchList.remove(task);
-        try {
-            dao.saveAllTasks(watchList);
-        } catch (IOException ex) {
-            // TODO: resolve
+        boolean remove;
+        synchronized(watchList) {
+            remove = watchList.remove(task);
         }
+            dao.saveAllTasks(watchList);
+            
         if (!remove) log.error("didn't remove");
         updated();
     }
@@ -230,15 +207,11 @@ public class TaskController implements ControllerIface {
      */
     private void startDaemon() {
         log.debug("entering startDaemon()");
-        try {
-            watchList = dao.loadTasks();
-        } catch (IOException ex) {
-            // TODO: resolve
-        }
 
-        Thread t = new Thread(new DaemonTicker());
-        t.setDaemon(true);
-        t.start();
+        watchList = dao.loadTasks();
+
+        tickerInstance = new Ticker();
+        tickerInstance.start();
 
     }
     //</editor-fold>
@@ -277,16 +250,22 @@ public class TaskController implements ControllerIface {
         }
     }
 
+    @Override
+    public void stopService() {
+        log.info("Asked for stopping service. Stopping ...");
+        tickerInstance.stopTheThread();
+    }
+
     /**
-     * This class is simple, it ticks  ... demonic :D
+     * This class is simple, it ticks  ... demonic :D (even it's not Daemon anymore :)
      * ... and it's a Singleton class which is implemented as 
      * "On Demand Holder"
      */
-    private class DaemonTicker extends Thread {
+    private class Ticker extends Thread {
 
         private Boolean stop = false;
 
-        public void stopTheDaemon() {
+        public void stopTheThread() {
             this.stop = true;
         }
         /**
@@ -296,7 +275,7 @@ public class TaskController implements ControllerIface {
         //TODO: Candidate for config parametr
         private long checkIntervalMillis = 1000;
 
-        private DaemonTicker() {
+        private Ticker() {
         }
 
         @Override

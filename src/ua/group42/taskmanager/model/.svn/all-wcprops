@@ -3,17 +3,29 @@ svn:wc:ra_dav:version-url
 V 76
 /svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/model
 END
+InternalControllerException.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/model/InternalControllerException.java
+END
 Task.java
 K 25
 svn:wc:ra_dav:version-url
 V 86
-/svn/twopals_ncl/!svn/ver/39/Task%20Manager/src/ua/group42/taskmanager/model/Task.java
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/model/Task.java
 END
 ObjectIsNotTaskException.java
 K 25
 svn:wc:ra_dav:version-url
 V 106
 /svn/twopals_ncl/!svn/ver/39/Task%20Manager/src/ua/group42/taskmanager/model/ObjectIsNotTaskException.java
+END
+InvalidTaskException.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/model/InvalidTaskException.java
 END
 TaskComparator.java
 K 25
