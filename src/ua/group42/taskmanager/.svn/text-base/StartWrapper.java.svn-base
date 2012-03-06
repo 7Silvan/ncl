@@ -1,10 +1,13 @@
 package ua.group42.taskmanager;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
-import ua.group42.taskmanager.control.BadConfigException;
+import ua.group42.taskmanager.configuration.BadConfigException;
+import ua.group42.taskmanager.configuration.ConfigReader;
 import ua.group42.taskmanager.control.ControllerIface;
 import ua.group42.taskmanager.control.TaskController;
 import ua.group42.taskmanager.model.Task;
@@ -22,6 +25,7 @@ public class StartWrapper implements StartWrapperIface, Notifiable, Updatable {
     // I had nothing else to declare it static
     private static StartWrapper starter;
     private static final Logger log = Logger.getLogger(StartWrapper.class);
+    private static final String CONFIG_FILE = "config.xml";
     /**
      * List for listeners that will listen for events, Conquer and Command ))
      */
@@ -30,14 +34,46 @@ public class StartWrapper implements StartWrapperIface, Notifiable, Updatable {
     public static void main(String[] args) throws BadConfigException {
 
         starter = new StartWrapper();
+        final ControllerIface controller;
+        final TaskView mainView;
+
+        ConfigReader confReader = ConfigReader.getInstance();
+        //reading configuration
+        try {
+            confReader.readConfig(CONFIG_FILE);
+            boolean matched = false;
+            do {
+                try {
+                    String userName = JOptionPane.showInputDialog("Log in or press Cancel to halt", "singleUser");
+                    if (userName == null) {
+                        log.info("App will halt by user's request");
+                        System.exit(0);
+                    }
+                    confReader.setUserName(userName);
+                    matched = true;
+                } catch (BadConfigException ex) {
+                    log.error("userName didn't match", ex);
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "userName didn't match",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } while (!matched);
+        } catch (BadConfigException ex) {
+            log.fatal("Configuration creating process error", ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Configuration creating process error. App will halt",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        } catch (IOException ex) {
+            log.fatal("IO Error", ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "IO Error with reading \"" + CONFIG_FILE + "\". App will halt",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
 
         // Start Controller
-        final ControllerIface controller = (ControllerIface) TaskController.getInstance();
-        controller.addListener( (Listener) starter);
+        controller = (ControllerIface) new TaskController(confReader);
+        controller.addListener((Listener) starter);
 
-//        final TaskView mainView = starter.createView(TypeView.main);
-//        starter.addListener(mainView);
-        final TaskView mainView = TaskViewFactory.init(controller);
+        mainView = TaskViewFactory.init(controller);
         starter.addListener((MainView) mainView);
 
         new Runnable() {
@@ -45,7 +81,7 @@ public class StartWrapper implements StartWrapperIface, Notifiable, Updatable {
             @Override
             public void run() {
                 try {
-                    starter.initSysTray((MainView)mainView);
+                    starter.initSysTray((MainView) mainView);
                     log.debug("SysTray started.");
                 } catch (Exception ex) {
                     log.error("SysTray didn't started.", ex);
@@ -60,7 +96,7 @@ public class StartWrapper implements StartWrapperIface, Notifiable, Updatable {
      * Initializing System Tray Menu
      */
     private void initSysTray(MainView view) {
-        //addListener(new SysTray());
+        //addListener(new SysTray(view));
         SysTray sysTray = new SysTray(view);
     }
 

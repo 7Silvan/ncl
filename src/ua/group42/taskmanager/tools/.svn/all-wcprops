@@ -7,7 +7,7 @@ Tools.java
 K 25
 svn:wc:ra_dav:version-url
 V 87
-/svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/tools/Tools.java
+/svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/tools/Tools.java
 END
 SimpleErrorHandler.java
 K 25
@@ -20,4 +20,10 @@ K 25
 svn:wc:ra_dav:version-url
 V 90
 /svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/tools/CSVTable.java
+END
+DateValidator.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/tools/DateValidator.java
 END

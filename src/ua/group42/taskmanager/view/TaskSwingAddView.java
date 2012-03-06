@@ -5,10 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import org.apache.log4j.*;
 import javax.swing.*;
-import ua.group42.taskmanager.model.InternalControllerException;
+import ua.group42.taskmanager.control.InternalControllerException;
 import ua.group42.taskmanager.model.InvalidTaskException;
 
 /**
@@ -22,7 +23,7 @@ public class TaskSwingAddView extends TaskAbstractView {
     private JButton addButton;
     private JTextField nameField;
     private JTextField desField;
-    private JTextField conctField;
+    //private JTextField idField;
     private JFormattedTextField dateField;
 
     @Override
@@ -49,9 +50,9 @@ public class TaskSwingAddView extends TaskAbstractView {
                 try {
                     TaskSwingView.getInstance().getControl()
                             .addTask(
+      //                      idField.getText(),
                             nameField.getText(),
                             desField.getText(),
-                            conctField.getText(),
                             dateField.getText());
                     TaskSwingView.getInstance().closeView(TaskSwingAddView.this);
                     log.info("added new Task with name :" 
@@ -68,17 +69,19 @@ public class TaskSwingAddView extends TaskAbstractView {
         });
         nameField = new JTextField("Name", 10);
         desField = new JTextField("Description", 10);
-        conctField = new JTextField("Contact", 10);
+        //idField = new JTextField("ID", 10); //context from config?
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.SECOND, 7);
         
-        dateField = new JFormattedTextField(TaskSwingView.getInstance().getControl().getDateFormatter().format(cal.getTime()));
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(TaskSwingView.getInstance().getControl().getDateFormat());
+        
+        dateField = new JFormattedTextField(dateFormatter.format(cal.getTime()));
 
         frame.getContentPane().add(addButton);
+        //frame.getContentPane().add(idField);
         frame.getContentPane().add(nameField);
         frame.getContentPane().add(desField);
-        frame.getContentPane().add(conctField);
         frame.getContentPane().add(dateField);
     }
 

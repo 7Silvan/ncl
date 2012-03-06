@@ -7,13 +7,13 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeSet;
-import ua.group42.taskmanager.control.ConfigReader;
+import ua.group42.taskmanager.configuration.ConfigReader;
 import org.apache.log4j.*;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import ua.group42.taskmanager.model.InternalControllerException;
+import ua.group42.taskmanager.control.InternalControllerException;
 import ua.group42.taskmanager.model.Task;
 import ua.group42.taskmanager.model.TaskComparator;
 import ua.group42.taskmanager.tools.*;
@@ -29,9 +29,11 @@ public final class XmlDAO implements TaskDAO {
     private final TaskComparator taskComparator = new TaskComparator();
     private ConfigReader config;
     private Document doc;
+    private SimpleDateFormat sdf = null;
 
-    public XmlDAO(ConfigReader confReader) throws IOException, InvalidFileException {
+    public XmlDAO(ConfigReader confReader) {
         config = confReader;
+        sdf = new SimpleDateFormat(config.getDateFormat());
     }
 
     @Override
@@ -43,10 +45,11 @@ public final class XmlDAO implements TaskDAO {
         }
         
          doc.getRootElement().addContent(new Element("task")
+                    .setAttribute("id", task.getId())
                     .addContent(new Element("name").addContent(task.getName()))
                     .addContent(new Element("description").addContent(task.getDescription()))
-                    .addContent(new Element("contacts").addContent(task.getContacts()))
-                    .addContent(new Element("date").addContent(task.getStringDate()))
+                    .addContent(new Element("date").addContent(
+                 sdf.format(task.getDate())))
          );
          
          XMLOutputter outPutter = new XMLOutputter(Format.getRawFormat().setIndent(" ").setLineSeparator("\n"));
@@ -69,10 +72,10 @@ public final class XmlDAO implements TaskDAO {
         while (it.hasNext()) {
             Task task = (Task) it.next();
             doc.getRootElement().addContent(new Element("task")
+                    .setAttribute("id", task.getId())
                     .addContent(new Element("name").addContent(task.getName()))
                     .addContent(new Element("description").addContent(task.getDescription()))
-                    .addContent(new Element("contacts").addContent(task.getContacts()))
-                    .addContent(new Element("date").addContent(task.getStringDate()))
+                    .addContent(new Element("date").addContent(sdf.format(task.getDate())))
                     );
         }
         
@@ -97,21 +100,17 @@ public final class XmlDAO implements TaskDAO {
                 doc = builder.build(config.getFileName());
 
                 Iterator it = doc.getRootElement().getChildren("task").iterator();
-
                 loadedTasks = new TreeSet<Task>(taskComparator);
 
                 while (it.hasNext()) {
                     Element element = (Element) it.next();
 
+                    String id = element.getAttributeValue("id");
                     String name = element.getChildText("name");
                     String description = element.getChildText("description");
-                    String contact = element.getChildText("contacts");
                     String date = element.getChildText("date");
 
-                    SimpleDateFormat sdf = new SimpleDateFormat(ConfigReader.getInstance().getDateFormat());
-
-
-                    Task task = new Task(name, description, contact, sdf.parse(date));
+                    Task task = new Task(id, name, description, sdf.parse(date));
 
                     loadedTasks.add(task);
                 }

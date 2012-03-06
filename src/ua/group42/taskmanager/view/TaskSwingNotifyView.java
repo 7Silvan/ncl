@@ -3,6 +3,7 @@ package ua.group42.taskmanager.view;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -12,7 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import ua.group42.taskmanager.model.*;
 import org.apache.log4j.*;
-import ua.group42.taskmanager.model.InternalControllerException;
+import ua.group42.taskmanager.control.InternalControllerException;
 import ua.group42.taskmanager.view.TypeView;
 
 /**
@@ -26,8 +27,10 @@ public class TaskSwingNotifyView extends TaskAbstractView {
     final private Task taskForNotify;
     private JTextField nameField;
     private JTextField desField;
-    private JTextField contField;
+    private JTextField idField;
     private JFormattedTextField dateField;
+    
+    private SimpleDateFormat sdf = null;
 
     @Override
     protected void createFrame() {
@@ -67,14 +70,19 @@ public class TaskSwingNotifyView extends TaskAbstractView {
         
         nameField = new JTextField(null, 10);
         desField = new JTextField(null, 10);
-        contField = new JTextField(null, 10);
+        idField = new JTextField(null, 10);
         dateField = new JFormattedTextField(new Date());
+        
+        nameField.setEditable(false);
+        desField.setEditable(false);
+        dateField.setEditable(false);
+        idField.setEditable(false);
 
         jPanel1.add(postponeButton);
         jPanel1.add(closeButton);
+        jPanel1.add(idField);
         jPanel1.add(nameField);
         jPanel1.add(desField);
-        jPanel1.add(contField);
         jPanel1.add(dateField);
         frame.getContentPane().add(jPanel1);
     }
@@ -84,15 +92,16 @@ public class TaskSwingNotifyView extends TaskAbstractView {
         super(TypeView.notify);
 
         taskForNotify = task;
+        
+        sdf = new SimpleDateFormat(TaskSwingView.getInstance().getControl().getDateFormat());
 
         update();
     }
 
     private void update() {
+        idField.setText(taskForNotify.getId());
         nameField.setText(taskForNotify.getName());
         desField.setText(taskForNotify.getDescription());
-        contField.setText(taskForNotify.getContacts());
-        dateField.setText(taskForNotify.getStringDate());
+        dateField.setText(sdf.format(taskForNotify.getDate()));
     }
-
 }

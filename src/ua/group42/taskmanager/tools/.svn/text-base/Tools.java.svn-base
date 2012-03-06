@@ -2,6 +2,8 @@ package ua.group42.taskmanager.tools;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Random;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -19,6 +21,23 @@ import org.xml.sax.XMLReader;
 public class Tools {
     
     private static final Logger log = Logger.getLogger(Tools.class);
+    
+    static final String alpha = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static Random random = new Random(Calendar.getInstance().getTimeInMillis());
+    //static final int len = 7;
+
+    /**
+     * Generates ID for Task
+     * @param len length of id String 
+     * @return String with alpha-numerical identifier
+     */
+    public static String nextID(int len) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            sb.append(alpha.charAt(random.nextInt(alpha.length())));
+        }
+        return sb.toString();
+    }
     
     /**
      * This method validates file of XML with related DTD
@@ -47,12 +66,28 @@ public class Tools {
 
                 return true;
             } catch (ParserConfigurationException ex){
-                log.error(null, ex);
+                log.error("Parser Config Error", ex);
             } catch (SAXException ex) {
-                
+                log.error("SAX error", ex);
             }
         }
         log.info("File \""+valFileXML+"\" is NOT valid");
         return false;
     }
 }
+
+// how it could be if use j6se
+// https://bitbucket.org/dfa/dollar/wiki/Home
+//// "0123456789" + "ABCDE...Z"
+//String validCharacters = $('0', '9').join() + $('A', 'Z').join();
+//
+//String randomString(int length) {
+//    return $(validCharacters).shuffle().slice(length).toString();
+//}
+//
+//@Test
+//public void buildFiveRandomStrings() {
+//    for (int i : $(5)) {
+//        System.out.println(randomString(12));
+//    }
+//}

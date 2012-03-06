@@ -9,31 +9,27 @@
 -->
 <!DOCTYPE config SYSTEM "configDTD.dtd">
 <config>
-    <arch type = "single"/>
     <dao>
         <class>ua.group42.taskmanager.control.data.XmlDAO</class>
-        <path>.\tasks.xml</path>
+        <userTaskList name="singleUser">.\tasks.xml</userTaskList>
+        <userTaskList name="user1User">.\user1Tasks.xml</userTaskList>
+        <userTaskList name="user2User">.\user2Tasks.xml</userTaskList>
+        <userTaskList name="user3User">.\user3Tasks.xml</userTaskList>
     </dao>
-<!--    <daogroup choice="xml">
-        <daoxml>
-            <class>ua.group42.taskmanager.control.data.XmlDAO</class>
-            <path>.\tasks.xml</path>
-        </daoxml>
-        <daocsv>
-            <class>ua.group42.taskmanager.control.data.CsvDAO</class>
-            <path>.\tasks.csv</path>
-        </daocsv>
-        <daodb>
-            <class>nothing.right.now</class>
-            <path>192.168.5.2</path>
-            <port>1234</port>
-            <login>machupickchu</login>
-            <pass>superpass</pass>
-        </daodb>
-    </daogroup> -->
+    <server>
+        <path>.\users.xml</path>
+    </server>
+    <client>
+        <ip>127.0.0.1</ip>
+        <port>9000</port>
+        <login>machupickchu</login>
+    </client>
     <params>
         <param name="locale">English</param>
         <param name="postponeMinutes">5</param>
         <param name="dateFormat">yyyy-MM-dd HH:mm:ss</param>
+        <param name="tickTime">1000</param><!-- in millis -->
+        <param name="portWork">9000</param>
+        <param name="portStop">9001</param>
     </params>
 </config>

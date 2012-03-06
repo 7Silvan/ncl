@@ -5,9 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import org.apache.log4j.*;
 import javax.swing.*;
-import ua.group42.taskmanager.model.InternalControllerException;
+import ua.group42.taskmanager.control.InternalControllerException;
 import ua.group42.taskmanager.model.InvalidTaskException;
 import ua.group42.taskmanager.model.Task;
 
@@ -19,11 +20,14 @@ import ua.group42.taskmanager.model.Task;
 public class TaskSwingEditView extends TaskAbstractView {
 
     private static final Logger log = Logger.getLogger(TaskSwingAddView.class);
+    private SimpleDateFormat sdf = new SimpleDateFormat(
+            TaskSwingView.getInstance().getControl().getDateFormat());
+            
     private JButton editButton;
     private JButton closeButton;
     private JTextField nameField;
     private JTextField desField;
-    private JTextField contField;
+    private JTextField idField;
     private JFormattedTextField dateField;
     
     private Task task4Edit;
@@ -49,7 +53,8 @@ public class TaskSwingEditView extends TaskAbstractView {
         
         nameField = new JTextField(null, 10);
         desField = new JTextField(null, 10);
-        contField = new JTextField(null, 10);
+        idField = new JTextField(null, 10);
+        idField.setEditable(false);
 
         dateField = new JFormattedTextField("Date");
         
@@ -59,13 +64,19 @@ public class TaskSwingEditView extends TaskAbstractView {
             public void actionPerformed(ActionEvent e) {
 
                 try {
+//                    TaskSwingView.getInstance().getControl()
+//                            .removeTask(task4Edit);
+//                    TaskSwingView.getInstance().getControl()
+//                            .addTask(
+//                            idField.getText(),
+//                            nameField.getText(),
+//                            desField.getText(),
+//                            dateField.getText());
                     TaskSwingView.getInstance().getControl()
-                            .removeTask(task4Edit);
-                    TaskSwingView.getInstance().getControl()
-                            .addTask(
+                            .editTask(
+                            task4Edit.getId(), 
                             nameField.getText(),
                             desField.getText(),
-                            contField.getText(),
                             dateField.getText());
                     TaskSwingView.getInstance().closeView(TaskSwingEditView.this);
                     log.info("edited Task with name :" 
@@ -92,9 +103,9 @@ public class TaskSwingEditView extends TaskAbstractView {
 
         frame.getContentPane().add(editButton);
         frame.getContentPane().add(closeButton);
+        frame.getContentPane().add(idField);
         frame.getContentPane().add(nameField);
         frame.getContentPane().add(desField);
-        frame.getContentPane().add(contField);
         frame.getContentPane().add(dateField);
     }
 
@@ -107,9 +118,9 @@ public class TaskSwingEditView extends TaskAbstractView {
     }
     
     private void update() {
+        idField.setText(task4Edit.getId());
         nameField.setText(task4Edit.getName());
         desField.setText(task4Edit.getDescription());
-        contField.setText(task4Edit.getContacts());
-        dateField.setText(task4Edit.getStringDate());
+        dateField.setText(sdf.format(task4Edit.getDate()));
     }
 }

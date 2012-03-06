@@ -1,6 +1,6 @@
 package ua.group42.taskmanager.control.data;
 
-import ua.group42.taskmanager.model.InternalControllerException;
+import ua.group42.taskmanager.control.InternalControllerException;
 
 /**
  *

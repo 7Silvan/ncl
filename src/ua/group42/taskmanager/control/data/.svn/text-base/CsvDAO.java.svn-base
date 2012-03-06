@@ -7,9 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeSet;
-import ua.group42.taskmanager.control.ConfigReader;
+import ua.group42.taskmanager.configuration.ConfigReader;
 import org.apache.log4j.*;
-import ua.group42.taskmanager.model.InternalControllerException;
+import ua.group42.taskmanager.control.InternalControllerException;
 import ua.group42.taskmanager.model.Task;
 import ua.group42.taskmanager.model.TaskComparator;
 import ua.group42.taskmanager.tools.CSVTable;
@@ -26,9 +26,11 @@ public final class CsvDAO implements TaskDAO {
     private CSVTable table = null;
     private PrintStream out = null;
     private ConfigReader config;
-
-    public CsvDAO(ConfigReader confReader) throws IOException, InvalidFileException {
+    private SimpleDateFormat sdf = null;
+    
+    public CsvDAO(ConfigReader confReader) {
         config = confReader;
+        sdf = new SimpleDateFormat(config.getDateFormat());
     }
 
     @Override
@@ -38,10 +40,10 @@ public final class CsvDAO implements TaskDAO {
 
             int row = table.getRowCount();
             table.insertRow(row--);
+            table.setValue(row, "id", task.getId());
             table.setValue(row, "name", task.getName());
             table.setValue(row, "description", task.getDescription());
-            table.setValue(row, "contacts", task.getContacts());
-            table.setValue(row, "date", task.getStringDate());
+            table.setValue(row, "date", sdf.format(task.getDate()));
 
             out = new PrintStream(config.getFileName());            
             table.writeTo(out);
@@ -63,7 +65,7 @@ public final class CsvDAO implements TaskDAO {
     }
 
     @Override
-    public synchronized void saveAllTasks(Collection<Task> tasks) {
+    public void saveAllTasks(Collection<Task> tasks) {
         try {
 
             table.eraseTable();
@@ -74,10 +76,10 @@ public final class CsvDAO implements TaskDAO {
 
                 int row = table.getRowCount();
                 table.insertRow(row--);
+                table.setValue(row, "id", task.getId());
                 table.setValue(row, "name", task.getName());
                 table.setValue(row, "description", task.getDescription());
-                table.setValue(row, "contacts", task.getContacts());
-                table.setValue(row, "date", task.getStringDate());
+                table.setValue(row, "date", sdf.format(task.getDate()));
 
             }
 
@@ -106,21 +108,18 @@ public final class CsvDAO implements TaskDAO {
         Collection<Task> loadedTasks = null;
 
         try {
-
             table = new CSVTable(config.getFileName());
 
             loadedTasks = new TreeSet<Task>(taskComparator);
 
             for (int i = 0; i < table.getRowCount(); i++) {
+                String id = table.getValue(i, "id");
                 String name = table.getValue(i, "name");
                 String description = table.getValue(i, "description");
                 String contact = table.getValue(i, "contacts");
                 String date = table.getValue(i, "date");
 
-                SimpleDateFormat sdf = new SimpleDateFormat(ConfigReader.getInstance().getDateFormat());
-
-
-                Task task = new Task(name, description, contact, sdf.parse(date));
+                Task task = new Task(id, name, description, sdf.parse(date));
                 
                 loadedTasks.add(task);
             }

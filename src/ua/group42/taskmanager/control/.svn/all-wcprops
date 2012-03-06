@@ -3,39 +3,27 @@ svn:wc:ra_dav:version-url
 V 78
 /svn/twopals_ncl/!svn/ver/41/Task%20Manager/src/ua/group42/taskmanager/control
 END
-Config.java
+InternalControllerException.java
 K 25
 svn:wc:ra_dav:version-url
-V 90
-/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/Config.java
+V 111
+/svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/control/InternalControllerException.java
 END
 TaskController.java
 K 25
 svn:wc:ra_dav:version-url
 V 98
-/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/TaskController.java
-END
-ConfigReader.java
-K 25
-svn:wc:ra_dav:version-url
-V 96
-/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/ConfigReader.java
-END
-BadConfigException.java
-K 25
-svn:wc:ra_dav:version-url
-V 102
-/svn/twopals_ncl/!svn/ver/37/Task%20Manager/src/ua/group42/taskmanager/control/BadConfigException.java
+/svn/twopals_ncl/!svn/ver/47/Task%20Manager/src/ua/group42/taskmanager/control/TaskController.java
 END
 ControllerIface.java
 K 25
 svn:wc:ra_dav:version-url
 V 99
-/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/ControllerIface.java
+/svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/control/ControllerIface.java
 END
 DAOFactory.java
 K 25
 svn:wc:ra_dav:version-url
 V 94
-/svn/twopals_ncl/!svn/ver/45/Task%20Manager/src/ua/group42/taskmanager/control/DAOFactory.java
+/svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/control/DAOFactory.java
 END

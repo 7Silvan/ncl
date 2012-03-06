@@ -1,40 +1,90 @@
 package ua.group42.taskmanager.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.log4j.*;
-import ua.group42.taskmanager.control.ConfigReader;
+import ua.group42.taskmanager.configuration.ConfigReader;
 
 /**
  *
  * @author Group42
- * 
  */
-public class Task implements Serializable, Comparable {
+public final class Task implements Serializable, Comparable {
 
     private static final Logger log = Logger.getLogger(Task.class);
+    private String id;
     private String name;
     private String description;
     private String contacts;
     private Date date;
+    private TaskState state = TaskState.DEAD;
 
-    public Task(String name, String description, String contacts, Date date) {
+    /**
+     * Constructs task with all given data
+     * @param id is unique identificator in dao
+     * @param name is title of task
+     * @param description -\\-
+     * @param contacts
+     * @param date  is point in time when the task to launch
+     */
+    public Task(
+            String id,
+            String name,
+            String description,
+            Date date) {
+        this.id = id;
         this.name = name;
         this.description = description;
-        this.contacts = contacts;
+        this.date = date;
+        setAlive(); // why it asked to make class Task final?
+    }
+
+    /**
+     * Most frequently calling by views, then id sets by controller
+     */
+    public Task(
+            String name,
+            String description,
+            Date date) {
+        this.name = name;
+        this.description = description;
         this.date = date;
     }
 
-    public Task(String name, String description, String contacts) {
+    public Task(
+            String id,
+            String name,
+            String description,
+            String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(ConfigReader.getInstance().getDateFormat());
+        this.id = id;
         this.name = name;
         this.description = description;
-        this.contacts = contacts;
+        try {
+            this.date = sdf.parse(date);
+        } catch (ParseException ex) {
+            log.error("DateString didn't matched pattern: " + date);
+            throw new ParseException("DateString didn't matched pattern: " + date, ex.getErrorOffset());
+        }
+        setAlive(); // why it asked to make class Task final?
     }
 
-    public Task(String name, String description) {
+    public Task(
+            String name,
+            String description,
+            String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(ConfigReader.getInstance().getDateFormat());
+
         this.name = name;
         this.description = description;
+        try {
+            this.date = sdf.parse(date);
+        } catch (ParseException ex) {
+            log.error("DateString didn't matched pattern: " + date);
+            throw new ParseException("DateString didn't matched pattern: " + date, ex.getErrorOffset());
+        }
     }
 
     public Task(Date date) {
@@ -51,14 +101,6 @@ public class Task implements Serializable, Comparable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setContacts(String contacts) {
-        this.contacts = contacts;
-    }
-
-    public String getContacts() {
-        return contacts;
     }
 
     public Date getDate() {
@@ -78,18 +120,30 @@ public class Task implements Serializable, Comparable {
     public String getDescription() {
         return description;
     }
-    
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setDead() {
+        this.state = TaskState.DEAD;
+    }
+
+    public void setAlive() {
+        this.state = TaskState.ALIVE;
+    }
+
+    public boolean isAlive() {
+        return (state == TaskState.ALIVE) ? true : false;
+    }
+
     @Override
     public String toString() {
-        return new StringBuilder("Name: ")
-                .append(name)
-                .append(" Desc.: ")
-                .append(description)
-                .append(" Cont.: ")
-                .append(contacts)
-                .append(" Date: ")
-                .append(getStringDate())
-                .toString();
+        return "Name: " + name + " Desc.: " + description + " Cont.: " + contacts + " Date: " + getDate().toString();
     }
 
     @Override

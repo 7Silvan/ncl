@@ -25,10 +25,18 @@ public abstract class TaskAbstractView implements TaskView {
     public TaskAbstractView(TypeView typeOfNewView) {
         type = typeOfNewView;
 
-        //TaskController.getInstance().addActionListener(this);
-
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            boolean nimbus = false;
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    nimbus = true;
+                    break;
+                }
+            }
+            
+            if (!nimbus)
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
         createFrame();

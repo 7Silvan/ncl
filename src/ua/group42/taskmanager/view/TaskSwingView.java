@@ -17,9 +17,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.apache.log4j.*;
-import ua.group42.taskmanager.control.ConfigReader;
+import ua.group42.taskmanager.configuration.ConfigReader;
 import ua.group42.taskmanager.control.ControllerIface;
-import ua.group42.taskmanager.model.InternalControllerException;
+import ua.group42.taskmanager.control.InternalControllerException;
 import ua.group42.taskmanager.model.*;
 
 /**
@@ -30,14 +30,19 @@ import ua.group42.taskmanager.model.*;
 public class TaskSwingView extends TaskAbstractView implements MainView {
 
     static ControllerIface controller = null;
-    public static final Logger log = Logger.getLogger(TaskSwingView.class);
+    
+    private static final Logger log = Logger.getLogger(TaskSwingView.class);
+    
+    private static final String CONFIG_FILE = "config.xml";
+    private SimpleDateFormat sdf = null;
+    
     private static volatile TaskSwingView instance;
     private DefaultTableModel tModel;
     private JTable table;
     public static final String[] TABLE_COLUMN_NAMES = {
+        "ID",
         "Name",
         "Description",
-        "Contacts",
         "Date"
     };
     private Collection<TaskView> views = new LinkedList<TaskView>();
@@ -65,6 +70,7 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
         if (instance == null) {
             instance = new TaskSwingView();
             instance.subscribeView(instance);
+            instance.sdf = new SimpleDateFormat(instance.getControl().getDateFormat());
         }
         return instance;
     }
@@ -185,16 +191,15 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
     @Override
     public synchronized void update() {
         tModel.setRowCount(0);
-        String stringDateFormat = ConfigReader.getInstance().getDateFormat();
-        SimpleDateFormat format = new SimpleDateFormat(stringDateFormat, Locale.US);
-
+        
         Collection<Task> taskList = getControl().getTasks();
 
         for (Task tTask : taskList) {
-            tModel.addRow(new String[]{tTask.getName(),
+            tModel.addRow(new String[]{
+                        tTask.getId(),
+                        tTask.getName(),
                         tTask.getDescription(),
-                        tTask.getContacts(),
-                        format.format(tTask.getDate())
+                        sdf.format(tTask.getDate())
                     });
         }
 
@@ -222,7 +227,8 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
             String dateStr = (String) table.getValueAt(temp, table.getColumnCount() - 1);
             Date date;
             try {
-                date = getControl().getDateFormatter().parse(dateStr);
+                SimpleDateFormat format = new SimpleDateFormat(getControl().getDateFormat());
+                date = format.parse(dateStr);
 
                 return new Task(list.get(0), list.get(1), list.get(2), date);
             } catch (ParseException ex) {

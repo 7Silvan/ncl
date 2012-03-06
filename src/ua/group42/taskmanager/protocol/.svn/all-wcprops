@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/twopals_ncl/!svn/ver/48/Task%20Manager/src/ua/group42/taskmanager/protocol
+END
+MessageParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/twopals_ncl/!svn/ver/48/Task%20Manager/src/ua/group42/taskmanager/protocol/MessageParser.java
+END
+RequestParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/twopals_ncl/!svn/ver/48/Task%20Manager/src/ua/group42/taskmanager/protocol/RequestParser.java
+END
+NetProtocol.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/twopals_ncl/!svn/ver/48/Task%20Manager/src/ua/group42/taskmanager/protocol/NetProtocol.java
+END
+ResponseParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/twopals_ncl/!svn/ver/48/Task%20Manager/src/ua/group42/taskmanager/protocol/ResponseParser.java
+END

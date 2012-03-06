@@ -8,12 +8,23 @@ import java.util.Comparator;
  */
 public class TaskComparator implements Comparator<Task>{
 
+    /**
+     * if t1 and t2 have not the same state, the "earlier" is alive one
+     * otherwise it comes out from date comparation
+     * @param t1 first task to compare
+     * @param t2 second task to compare
+     * @return 0 if tasks equals, a value less than 0 if t1.date is less than t2.date, 
+     * otherwise a value greater than 0
+     */
     @Override
     public int compare(Task t1, Task t2) {              
-//        Long anotherTaskTime = t1.getDate().getTime();
-//        Long thisTime = t2.getDate().getTime();
+//        Long thisTime = t1.getDate().getTime();
+//        Long anotherTaskTime = t2.getDate().getTime();
 //        return thisTime.compareTo(anotherTaskTime);
-        return ((Long)t1.getDate().getTime()).compareTo(t2.getDate().getTime());
+        if (t1.isAlive() == t2.isAlive())
+            return ((Long)t1.getDate().getTime()).compareTo(t2.getDate().getTime());
+        else 
+            return (t1.isAlive())?-1:1;
     }
     
 }

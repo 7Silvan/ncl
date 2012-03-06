@@ -2,15 +2,13 @@ package ua.group42.taskmanager.control;
 
 import java.util.*;
 import org.apache.log4j.*;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import javax.swing.JOptionPane;
-import ua.group42.taskmanager.Listener;
-import ua.group42.taskmanager.Notifiable;
-import ua.group42.taskmanager.Updatable;
+import ua.group42.taskmanager.*;
 import ua.group42.taskmanager.model.*;
 import ua.group42.taskmanager.control.data.*;
+import ua.group42.taskmanager.configuration.*;
+import ua.group42.taskmanager.tools.Tools;
 
 /**
  * Is controlling all events and supports all important processes
@@ -20,10 +18,6 @@ import ua.group42.taskmanager.control.data.*;
  */
 public class TaskController implements ControllerIface {
 
-    /**
-     * Instance of TaskController for Singleness
-     */
-    private static TaskController instance = null;
     /**
      * Instance of Ticker of TaskController (@see DaemonTicker)
      */
@@ -40,9 +34,47 @@ public class TaskController implements ControllerIface {
      * private TaskFolderModel model;
      */
     private static TaskDAO dao;
+    private ConfigReader configuration;
     private static final Logger log = Logger.getLogger(TaskController.class);
-    public static final String CONFIG_FILE = "config.xml";
-    public static final String VERSION = "V.0.2";
+    public static final String VERSION = "V.1.1";
+
+    /**
+     * Search for duplicate id in exsting tasks
+     * @param id which is testing
+     * @return result of matching
+     */
+    private boolean isIdFree(String id) {
+        if (id == null) {
+            return false;
+        }
+        for (Task task : watchList) {
+            if (task.getId().equals(id)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Method for complex generating and validating id
+     */
+    private String nextTaskID() {
+        String result = null;
+        Integer length = null;
+        String lengthParam = configuration.getParam("idLength");
+
+        if (lengthParam == null) {
+            length = new Integer(7);
+        } else {
+            length = Integer.parseInt(lengthParam);
+        }
+
+        do {
+            result = Tools.nextID(length);
+        } while (!this.isIdFree(result));
+        return result;
+    }
 
     /**
      * Sets task as postponed, adds time which stated in @link ConfigReader
@@ -54,48 +86,56 @@ public class TaskController implements ControllerIface {
         //adding postpone time
         Calendar c = Calendar.getInstance();
         c.setTime(temp.getDate());
-        c.add(Calendar.MINUTE, ConfigReader.getInstance().getPostponeTime());
+        c.add(Calendar.MINUTE, configuration.getPostponeTime());
         //throwing task on watching
         temp.setDate(c.getTime());
 
-            boolean add;
-            synchronized (watchList) {
-                add = watchList.add(temp);
-            }
-            if (!add) {
-                log.error("Task date is not unique.");
-                throw new InvalidTaskException("Task date is not unique.");
-            }
-            
-            dao.saveTask(temp);
+        boolean add;
+        synchronized (watchList) {
+            add = watchList.add(temp);
+        }
+        if (!add) {
+            log.error("Task is not unique.");
+            throw new InvalidTaskException("Task is not unique.");
+        }
+
+        dao.saveTask(temp);
         updated();
     }
 
     @Override
     public void addTask(Task task) {
-            boolean add;
-            synchronized (watchList) {
-                add = watchList.add(task);
+        boolean add;
+        synchronized (watchList) {
+            if (!this.isIdFree(task.getId())) {
+                task.setId(nextTaskID());
             }
+            add = watchList.add(task);
+        }
 
-            if (!add) {
-                log.error("Task date is not unique.");
-                throw new InvalidTaskException("Task date is not unique.");
-            }
-            
+        if (!add) {
+            log.error("Task date is not unique.");
+            throw new InvalidTaskException("Task date is not unique.");
+        }
+
+        synchronized (watchList) {
             dao.saveTask(task);
+        }
         updated();
     }
 
     @Override
-    public void addTask(String name, String description, String contacts, String date) throws InvalidTaskException {
-        SimpleDateFormat sdf = new SimpleDateFormat(ConfigReader.DEFAULT_DATE_FORMAT);
+    public void addTask(String id, String name, String description, String date) throws InvalidTaskException {
+        SimpleDateFormat sdf = new SimpleDateFormat(getDateFormat());
         try {
-            addTask(new Task(name, description, contacts, sdf.parse(date)));
+            if (!this.isIdFree(id)) {
+                id = nextTaskID();
+            }
+            addTask(new Task(id, name, description, sdf.parse(date)));
             updated();
         } catch (ParseException ex) {
             log.error("Date Parse Error: " + date + " didn't match the pattern ("
-                    + ConfigReader.DEFAULT_DATE_FORMAT + ").", ex);
+                    + getDateFormat() + ").", ex);
             throw new InvalidTaskException("Parsing Data Error", ex);
         }
     }
@@ -109,7 +149,7 @@ public class TaskController implements ControllerIface {
     @Override
     public Collection<Task> getTasks() {
         if (watchList == null) {
-                watchList = dao.loadTasks();
+            watchList = dao.loadTasks();
         }
         return Collections.unmodifiableCollection(watchList);
     }
@@ -117,12 +157,34 @@ public class TaskController implements ControllerIface {
     @Override
     public void removeTask(Task task) {
         boolean remove;
-        synchronized(watchList) {
+        synchronized (watchList) {
             remove = watchList.remove(task);
         }
+
+        if (!remove) {
+            log.error("Task was not removed.");
+            throw new InternalControllerException("Task was not removed.");
+        }
+
+        synchronized (watchList) {
             dao.saveAllTasks(watchList);
-            
-        if (!remove) log.error("didn't remove");
+        }
+        updated();
+    }
+
+    @Override
+    public void removeTask(String id) {
+        synchronized (watchList) {
+            Iterator<Task> it = Collections.synchronizedCollection(watchList).iterator();
+            Task task = null;
+            while (it.hasNext()) {
+                task = it.next();
+                if (task.getId().equals(id)) {
+                    it.remove();
+                }
+            }
+            dao.saveAllTasks(watchList);
+        }
         updated();
     }
 
@@ -132,8 +194,8 @@ public class TaskController implements ControllerIface {
      * @return SimpleDateFormat initialized with given pattern
      */
     @Override
-    public SimpleDateFormat getDateFormatter() {
-        return new SimpleDateFormat(ConfigReader.getInstance().getDateFormat());
+    public String getDateFormat() {
+        return configuration.getDateFormat();
     }
 
     /**
@@ -160,23 +222,15 @@ public class TaskController implements ControllerIface {
         }
     }
 
-    //<editor-fold defaultstate="" desc="initialising TC and parts of it">
-    private TaskController() {
-        ConfigReader confReader = ConfigReader.getInstance();
+    public TaskController(ConfigReader confReader) {
         try {
-            confReader.readConfig(CONFIG_FILE);
-            log.debug("Config readed.");
+            this.configuration = confReader;
 
             dao = DAOFactory.getDAO(confReader);
             log.debug("Dao matched and configured.");
 
-            startDaemon();
+            startDaemon(confReader);
             log.debug("Daemon Started.");
-        } catch (IOException ex) {
-            log.fatal("IO Error", ex);
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "IO Error",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
         } catch (BadConfigException ex) {
             log.fatal("Configuration Error", ex);
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Configuration Error",
@@ -185,36 +239,32 @@ public class TaskController implements ControllerIface {
         }
     }
 
-    /**
-     * We will use Double Checked Idiom about Singlton implementation
-     */
-    public static TaskController getInstance() {
-        TaskController localInstance = instance;
-        if (localInstance == null) {
-            synchronized (TaskController.class) {
-                localInstance = instance;
-                if (localInstance == null) {
-                    instance = localInstance = new TaskController();
-                }
-            }
-        }
-
-        return localInstance;
-    }
-
+//    /**
+//     * We will use Double Checked Idiom about Singlton implementation
+//     */
+//    public static TaskController getInstance() {
+//        TaskController localInstance = instance;
+//        if (localInstance == null) {
+//            synchronized (TaskController.class) {
+//                localInstance = instance;
+//                if (localInstance == null) {
+//                    instance = localInstance = new TaskController();
+//                }
+//            }
+//        }
+//        return localInstance;
+//    }
     /**
      * Initializing daemon thread which will tick for checking Tasks.
      */
-    private void startDaemon() {
+    private void startDaemon(ConfigReader configReader) {
         log.debug("entering startDaemon()");
 
         watchList = dao.loadTasks();
 
-        tickerInstance = new Ticker();
+        tickerInstance = new Ticker(configReader);
         tickerInstance.start();
-
     }
-    //</editor-fold>
 
     @Override
     public synchronized void addListener(Listener listener) {
@@ -240,12 +290,12 @@ public class TaskController implements ControllerIface {
             if (newTime >= compareTime) {
                 log.info(String.format("Gotcha task named %s at %s", charge.getName(), Calendar.getInstance().getTime().toString()));
 
-                // talks to Notifiables about rised task
-                TaskController.getInstance().taskNotifying((Task) charge.clone());
+                // talks to Notifiables about raised task
+                TaskController.this.taskNotifying((Task) charge.clone());
                 // removing task from list of working tasks
                 removeTask(charge);
                 // updating watchlist
-                TaskController.getInstance().updated();
+                TaskController.this.updated();
             }
         }
     }
@@ -255,6 +305,29 @@ public class TaskController implements ControllerIface {
         log.info("Asked for stopping service. Stopping ...");
         tickerInstance.stopTheThread();
     }
+    //TODO: implement it
+
+    @Override
+    public void addTask(String name, String description, String date) throws InvalidTaskException, InternalControllerException {
+        addTask(null, name, description, date);
+    }
+
+    @Override
+    public void editTask(String idTaskWas, Task become) throws InvalidTaskException, InternalControllerException {
+        removeTask(idTaskWas);
+        addTask(become);
+    }
+
+    @Override
+    public void editTask(String idWas, String newName, String newDescription, String newDate) throws InvalidTaskException, InternalControllerException {
+        removeTask(idWas);
+        addTask(newName, newDescription, newDate);
+    }
+
+    @Override
+    public ConfigReader getConfigReader() {
+        return configuration;
+    }
 
     /**
      * This class is simple, it ticks  ... demonic :D (even it's not Daemon anymore :)
@@ -263,6 +336,7 @@ public class TaskController implements ControllerIface {
      */
     private class Ticker extends Thread {
 
+        private final long DEFAULT_CHECK_INTERVAL_MILLIS = 1000;
         private Boolean stop = false;
 
         public void stopTheThread() {
@@ -272,10 +346,10 @@ public class TaskController implements ControllerIface {
          * Defines Interval for regular checking of taskList
          * Measuring in milliseconds, so 10000 msec = 10 sec.
          */
-        //TODO: Candidate for config parametr
-        private long checkIntervalMillis = 1000;
+        private Long checkIntervalMillis;
 
-        private Ticker() {
+        private Ticker(ConfigReader configReader) {
+            checkIntervalMillis = (Long) ((configReader.getParam("tickTime") == null) ? DEFAULT_CHECK_INTERVAL_MILLIS : Long.parseLong(configReader.getParam("tickTime")));
         }
 
         @Override
@@ -283,16 +357,16 @@ public class TaskController implements ControllerIface {
             log.info(String.format("in Daemon run(): currentThread() is %s", Thread.currentThread().getName()));
 
             while (true) {
+                if (stop) {
+                    break;
+                }
                 try {
-                    if (stop) {
-                        break;
-                    }
                     Thread.sleep(checkIntervalMillis);
                     TaskController.this.checkTasksAfterTick();
                 } catch (InterruptedException ex) {
                     log.debug("InterruptedException", ex);
                 }
-                log.info("in Daemon run(): woke up again");
+                log.debug("in Daemon run(): woke up again");
             }
         }
     }

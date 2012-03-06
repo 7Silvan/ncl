@@ -1,6 +1,7 @@
 package ua.group42.taskmanager.control;
 
-import ua.group42.taskmanager.model.InternalControllerException;
+import ua.group42.taskmanager.configuration.ConfigReader;
+import ua.group42.taskmanager.configuration.BadConfigException;
 import java.lang.reflect.Constructor;
 import org.apache.log4j.*;
 import ua.group42.taskmanager.control.data.TaskDAO;
@@ -20,7 +21,7 @@ public class DAOFactory {
      * @throws BadConfigException if error with choice occured 
      * (#see ua.group42.taskmanager.control.ConfigReader.ResType)
      */
-    static TaskDAO getDAO(ConfigReader confReader) throws BadConfigException {
+    public static TaskDAO getDAO(ConfigReader confReader) throws BadConfigException {
 
         try {
             Class daoClass = Class.forName(confReader.getDaoClassName());

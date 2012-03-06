@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE users SYSTEM "users.dtd">
+
+<users>
+ <user banned="false">admin</user>
+ <user banned="false">user2</user>
+ <user banned="true">user1</user>
+ <user banned="false">user3</user>
+</users>
+

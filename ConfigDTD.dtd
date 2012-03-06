@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT config (arch, dao, params*)>
 
-<!ELEMENT arch EMPTY>
-<!ATTLIST arch
-type (client|server|single) #REQUIRED>
+<!ELEMENT config (dao, server?, client?, params*)>
 
-<!ELEMENT dao (class, path) >
-<!--<!ATTLIST dao
-choice (xml|csv) #REQUIRED> 
+<!ELEMENT dao (class, userTaskList*)>
+<!ELEMENT userTaskList (#PCDATA)>
+<!ATTLIST userTaskList
+name CDATA #REQUIRED>
 
+<!ELEMENT server (path)>
+<!ELEMENT client (ip, port, login)>
+
+<!ELEMENT ip (#PCDATA)>
 <!ELEMENT port (#PCDATA)>
 <!ELEMENT login (#PCDATA)>
-<!ELEMENT pass (#PCDATA)>
--->
 
 <!ELEMENT class (#PCDATA)>
 <!ELEMENT path (#PCDATA)>

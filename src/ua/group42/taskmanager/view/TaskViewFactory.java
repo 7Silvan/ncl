@@ -20,7 +20,7 @@ public class TaskViewFactory {
         view.update();
         return (TaskView)view;
     }
-
+    
     public static TaskView createView(TypeView type, Task task) {
 
         switch (type) {

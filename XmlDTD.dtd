@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!ELEMENT tasks (task*)>
-<!ELEMENT task (name, description, contacts, date)>
+<!ELEMENT task (name, description, date)>
+
+<!ATTLIST task
+id CDATA #REQUIRED>
+
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
-<!ELEMENT contacts (#PCDATA)>
 <!ELEMENT date (#PCDATA)>
 
+<!-- 
+<!ATTLIST task
+userName CDATA #REQUIRED>
+-->
