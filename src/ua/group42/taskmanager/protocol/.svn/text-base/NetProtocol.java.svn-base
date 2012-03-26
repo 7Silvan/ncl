@@ -134,16 +134,16 @@ public class NetProtocol {
         Iterator<Element> members = taskList.iterator();
         while (members.hasNext()) {
             Element member = members.next();
-            if (member.getChildText("name").equals("id")) {
+            if (member.getChildText("name").equalsIgnoreCase("id")) {
+                id = member.getChild("value").getChildText("string");
+            }
+            if (member.getChildText("name").equalsIgnoreCase("name")) {
                 name = member.getChild("value").getChildText("string");
             }
-            if (member.getChildText("name").equals("name")) {
-                name = member.getChild("value").getChildText("string");
-            }
-            if (member.getChildText("name").equals("description")) {
+            if (member.getChildText("name").equalsIgnoreCase("description")) {
                 desription = member.getChild("value").getChildText("string");
             }
-            if (member.getChildText("name").equals("date")) {
+            if (member.getChildText("name").equalsIgnoreCase("date")) {
                     date = sdf.parse(member.getChild("value").getChildText("string"));
             }
         }
@@ -258,6 +258,23 @@ public class NetProtocol {
                 XMLOutputter output = new XMLOutputter(Format.getRawFormat().setIndent(" ").setLineSeparator("\n\r"));
                 output.output(doc, response);
                 return response.toString();
+            } catch (IOException ex) {
+                log.error("Response building error", ex);
+                throw new RuntimeException("Response building error", ex);
+            }
+        }
+        
+        public static String requestUpdate() {
+            StringWriter result = null;
+            try {
+                result = new StringWriter();
+                Document doc = new Document(new Element("methodCall"));
+                doc.getRootElement()
+                        .addContent(new Element("methodName").addContent("update"))
+                        .addContent(new Element("params"));
+                XMLOutputter output = new XMLOutputter(Format.getRawFormat().setIndent(" ").setLineSeparator("\n\r"));
+                output.output(doc, result);
+                return result.toString();
             } catch (IOException ex) {
                 log.error("Response building error", ex);
                 throw new RuntimeException("Response building error", ex);
@@ -446,6 +463,25 @@ public class NetProtocol {
             }
         }
 
+        public static String requestGetTasks() {
+            StringWriter result = null;
+            try {
+                result = new StringWriter();
+                Document doc = new Document(new Element("methodCall"));
+                
+                doc.getRootElement()
+                        .addContent(new Element("methodName").addContent("getTasks"))
+                        .addContent(new Element("params"));
+                XMLOutputter output = new XMLOutputter(Format.getRawFormat().setIndent(" ").setLineSeparator("\n\r"));
+                output.output(doc, result);
+                return result.toString();
+            } catch (IOException ex) {
+                log.error("Response building error", ex);
+                throw new RuntimeException("Response building error", ex);
+            }
+        }
+
+         
          public static String requestLogIn(String login) {
             StringWriter result = null;
             try {
@@ -475,7 +511,7 @@ public class NetProtocol {
                 Document doc = new Document(new Element("methodCall"));
                 
                 doc.getRootElement()
-                        .addContent(new Element("methodName").addContent("logIn"))
+                        .addContent(new Element("methodName").addContent("logOut"))
                         .addContent(new Element("params")
                         .addContent(new Element("param")
                         .addContent(new Element("value")

@@ -27,3 +27,21 @@ svn:wc:ra_dav:version-url
 V 95
 /svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/tools/DateValidator.java
 END
+Messenger.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/twopals_ncl/!svn/ver/51/Task%20Manager/src/ua/group42/taskmanager/tools/Messenger.java
+END
+CustomObjectInputStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/tools/CustomObjectInputStream.java
+END
+CustomObjectOutputStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/tools/CustomObjectOutputStream.java
+END

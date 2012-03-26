@@ -25,7 +25,7 @@ public class Config {
          */
         public DaoSets(String className, String singleUserPath) throws BadConfigException {
             if (className == null || singleUserPath == null) {
-                throw new BadConfigException("null path");
+                throw new BadConfigException("Cannot create DaoSets - null arguments");
             }
             this.className = className;
             addUserTaskListPath("singleUser", singleUserPath);
@@ -33,7 +33,7 @@ public class Config {
 
         public DaoSets(String className) throws BadConfigException {
             if (className == null) {
-                throw new BadConfigException("null path");
+                throw new BadConfigException("Cannot create DaoSets - null arguments");
             }
             this.className = className;
         }
@@ -49,7 +49,19 @@ public class Config {
          * @return the value of path
          */
         public String getPath() throws BadConfigException {
-            return getUserTaskListPath(userName);
+            if (userName == null)
+                return getUserTaskListPath("singleUser");
+            else
+                return getUserTaskListPath(userName);
+        }
+        
+        /**
+         * Get the value of user's task list file path with given user's name
+         *
+         * @return the value of path
+         */
+        public String getPath(String name) throws BadConfigException {
+            return getUserTaskListPath(name);
         }
 
         /**
@@ -94,6 +106,12 @@ public class Config {
         
         public Set<String> getUserNames() {
             return paramList.keySet();
+        }
+
+        void addUserTaskListPath(String name, String value, Boolean preferred) throws BadConfigException {
+            addUserTaskListPath(name, value);
+            if (preferred == true)    
+                userName = name;
         }
     }
 
@@ -203,6 +221,15 @@ public class Config {
      */
     public String getPath() throws BadConfigException {
         return getDaoSets().getPath();
+    }
+    
+    /**
+     * Big shot of our DAO Sets, it desrvers a method :)
+     * @return path to file for our DAO
+     * @throws BadConfigException if errors in init DAO Sets or params occured
+     */
+    public String getPath(String name) throws BadConfigException {
+        return getDaoSets().getPath(name);
     }
 
     /**

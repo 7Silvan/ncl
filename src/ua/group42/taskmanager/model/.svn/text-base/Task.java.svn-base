@@ -65,7 +65,7 @@ public final class Task implements Serializable, Comparable {
         try {
             this.date = sdf.parse(date);
         } catch (ParseException ex) {
-            log.error("DateString didn't matched pattern: " + date);
+            log.error("DateString didn't matched pattern: " + date, ex);
             throw new ParseException("DateString didn't matched pattern: " + date, ex.getErrorOffset());
         }
         setAlive(); // why it asked to make class Task final?
@@ -82,7 +82,7 @@ public final class Task implements Serializable, Comparable {
         try {
             this.date = sdf.parse(date);
         } catch (ParseException ex) {
-            log.error("DateString didn't matched pattern: " + date);
+            log.error("DateString didn't matched pattern: " + date, ex);
             throw new ParseException("DateString didn't matched pattern: " + date, ex.getErrorOffset());
         }
     }

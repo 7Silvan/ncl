@@ -132,7 +132,6 @@ public class TaskController implements ControllerIface {
                 id = nextTaskID();
             }
             addTask(new Task(id, name, description, sdf.parse(date)));
-            updated();
         } catch (ParseException ex) {
             log.error("Date Parse Error: " + date + " didn't match the pattern ("
                     + getDateFormat() + ").", ex);
@@ -220,8 +219,9 @@ public class TaskController implements ControllerIface {
                 ((Notifiable) listener).taskNotify(task);
             }
         }
+        updated();
     }
-
+    
     public TaskController(ConfigReader confReader) {
         try {
             this.configuration = confReader;
@@ -295,7 +295,7 @@ public class TaskController implements ControllerIface {
                 // removing task from list of working tasks
                 removeTask(charge);
                 // updating watchlist
-                TaskController.this.updated();
+                //TaskController.this.updated();
             }
         }
     }
@@ -305,7 +305,6 @@ public class TaskController implements ControllerIface {
         log.info("Asked for stopping service. Stopping ...");
         tickerInstance.stopTheThread();
     }
-    //TODO: implement it
 
     @Override
     public void addTask(String name, String description, String date) throws InvalidTaskException, InternalControllerException {
@@ -354,7 +353,7 @@ public class TaskController implements ControllerIface {
 
         @Override
         public void run() {
-            log.info(String.format("in Daemon run(): currentThread() is %s", Thread.currentThread().getName()));
+            log.info(String.format("in Ticker run(): currentThread() is %s", Thread.currentThread().getName()));
 
             while (true) {
                 if (stop) {
@@ -366,8 +365,10 @@ public class TaskController implements ControllerIface {
                 } catch (InterruptedException ex) {
                     log.debug("InterruptedException", ex);
                 }
-                log.debug("in Daemon run(): woke up again");
+                //log.debug("in Ticker run(): woke up again");
             }
+            
+            log.debug("Ticker finished.");
         }
     }
 }

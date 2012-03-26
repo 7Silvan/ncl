@@ -1,118 +1,251 @@
 package ua.group42.taskmanager.server;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Method;
+import java.io.InputStream;
 import java.net.Socket;
 import java.text.ParseException;
+import java.util.Collection;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import ua.group42.taskmanager.control.ControllerIface;
+import ua.group42.taskmanager.control.TaskController;
+import ua.group42.taskmanager.model.Task;
 import ua.group42.taskmanager.protocol.*;
+import ua.group42.taskmanager.tools.Messenger;
 
 /**
  *
  * @author Silvan
  */
 public class ServWorker implements Runnable {
-    
+
     private static final Logger log = Logger.getLogger(ServWorker.class);
-    
     private Socket clientSocket = null;
     private ServerSideWrapperIface server = null;
     private ControllerIface taskController = null;
+    private Messenger messenger = null;
+    private String login = null;
+    private Boolean loggedIn = false;
+    private InputStream inputStream = null;
+    private Boolean updated = false;
+    private Boolean doUpdate = false;
 
-    public ServWorker(ServerSideWrapperIface server, Socket clientSocket) {
-        this.clientSocket = clientSocket;
-        this.server = server;
+    public Boolean isLoggedIn() {
+        return loggedIn;
     }
-    
-    private boolean logIn(String login) throws IllegalAccessException {
-        
-        if (server.canConnect(login)) {
-            server.getUser(login).setState(UserModel.State.ONLINE);
-            return true;
+
+    private void setLoggedIn(Boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
+    public ServWorker(ServerSideWrapperIface server, Socket connection) throws IOException {
+        this.clientSocket = connection;
+        this.server = server;
+        this.inputStream = connection.getInputStream();
+        try {
+            messenger = new Messenger(connection);
+        } catch (IOException ex) {
+            log.fatal("Cannot open streams to communicate with server.", ex);
+            System.exit(0);
+        } catch (Exception ex) {
+            log.fatal("Something horrible happened", ex);
+            System.exit(0);
         }
+    }
+
+    private String logIn(String login) throws IllegalAccessException, IOException {
+        String response = null;
+//        log.debug("trying to lock messenger logIn");
+//        synchronized (messenger) {
+
+        if (server.canConnect(login)) {
+            taskController = new TaskController(server.getConfig());
+            // TODO: link client as listener
+
+            taskController.addListener(new ServerSideProxy(this));
+            server.doConnect(login);
+            this.login = login;
+            setLoggedIn(true);
+            response = NetProtocol.ServerSide.responseOK();
+            log.info(login + " Logged in.");
+        } else {
+            response = NetProtocol.ServerSide.responseError(NetProtocol.WrongLoginNameError, "logOut(" + login + ")");
+        }
+
+        //messenger.write(response);
+        return response;
+//        }
+    }
+
+    private String logOut(String login) throws IllegalAccessException {
+
+        String response = null;
+        if (isLoggedIn() && this.login.equals(login)) {
+            response = NetProtocol.ServerSide.responseOK();
+            taskController.stopService();
+            server.doDisConnect(login);
+            setLoggedIn(false);
+        } else {
+            response = NetProtocol.ServerSide.responseError(NetProtocol.CannotProvideActionError, "logOut(" + login + ")");
+        }
+        return response;
+    }
+
+    private String getTasks() throws IOException {
+
+        String response = null;
+        if (isLoggedIn()) {
+            Collection<Task> tasks = taskController.getTasks();
+            response = NetProtocol.ServerSide.responseTransferTasks(tasks);
+        } else {
+            if (clientSocket.isConnected() && !clientSocket.isOutputShutdown()) {
+                response = NetProtocol.ServerSide.responseError(NetProtocol.CannotProvideActionError, "getTasks");
+            }
+        }
+        log.debug("Sending message: \n" + response );
+        return response;
+    }
+
+    private String removeTask(String id) throws IOException {
+
+        String response = null;
+        if (isLoggedIn()) {
+            taskController.removeTask(id);
+            response = NetProtocol.ServerSide.responseOK();
+        } else {
+            response = NetProtocol.ServerSide.responseError(NetProtocol.CannotProvideActionError, "removeTasks");
+        }
+
+        return response;
+    }
+
+    private String addTask(Task task) throws IOException {
+
+        String response = null;
+        if (isLoggedIn()) {
+            taskController.addTask(
+                    task.getName(),
+                    task.getDescription(),
+                    task.getStringDate());
+            response = NetProtocol.ServerSide.responseOK();
+        } else {
+            response = NetProtocol.ServerSide.responseError(NetProtocol.CannotProvideActionError, "addTasks");
+        }
+
         
-        return false;
+        log.debug("addTask returned response: \n" + response);
+        return response;
+    }
+
+    private String editTask(Task task) throws IOException {
+
+        String response = null;
+
+        if (isLoggedIn()) {
+            taskController.editTask(task.getId(), task);
+            response = NetProtocol.ServerSide.responseOK();
+        } else {
+            response = NetProtocol.ServerSide.responseError(NetProtocol.CannotProvideActionError, "editTasks");
+        }
+
+        return response;
     }
 
     @Override
     public void run() {
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
-        StringBuilder message = null;
-        String readed;
         try {
-            reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             do {
-                message = new StringBuilder();
-              do {
-                 // TODO: implement logic here
-                 
-                 readed = reader.readLine();
-                 message.append(readed);
-                 log.info(readed);
-              } while ( !(readed.equalsIgnoreCase("</methodCall>") || readed.equalsIgnoreCase("</methodResponse>")));
-              
-              String command = message.toString();
-              SAXBuilder builder = new SAXBuilder();
-              Document doc = builder.build(readed);
-              
-              MessageParser msg = new MessageParser(doc);
-              if (msg.isRequest()) {
+                int errorCount = 0;  // counts errors running
+
+                do {
                     try {
-                        RequestParser request = new RequestParser(msg);
-                        
-//                        Class c = Class.forName("ServWorker");
-//                        Method[] allMethods = c.getMethods();
-//                        for (Method m : allMethods) {
-//                            if (m.getName().equals("run"))
-//                                continue;
-//                            if (m.getName().equals(request.getMethodName()))
-//                                m.invoke(this, request.getParametr());
-//                            
-//                        }
-                      try {  
-                        if (request.getMethodName().equals("logIn")) {
-                            boolean result = logIn((String)request.getParametr());
-                            if (result == true)
-                                writer.write(NetProtocol.ServerSide.responseOK());
-                            else 
-                                writer.write(NetProtocol.ServerSide.responseError(NetProtocol.WrongLoginNameError, (String) request.getParametr()));
+                        MessageParser msg = null;
+                        log.debug("(idle reader) in stream available = " + inputStream.available());
+                        while (inputStream.available() == 0) {
+                            Thread.sleep(100);
                         }
-                      } catch (IllegalAccessException ex) {
-                        log.error("Cannot access with given userName :" + request.getParametr());
-                    }
-                      
+                        log.debug("(idle reader) in stream available = " + inputStream.available());
+
+
+                        log.debug("trying to lock messenger by idleReader");
+                        messenger.checkOwners();
+                        synchronized (messenger) {
+                            messenger.owned();
+                            log.debug("locked messenger by idleReader");
+                            log.debug("Scanning message in worker (" + login + ")");
+//                        String message = (String) messenger.reader.readObject();
+//                        log.debug("message readed : \n" + message);
+//                        if (message == null || message.equals("")) {
+//                            continue;
+//                        }
+
+
+//                        SAXBuilder builder = new SAXBuilder();
+//                        Document doc = builder.build(new StringReader(message));
+
+//                        MessageParser msg = new MessageParser(doc);
+                            msg = messenger.getNextMessage();
+
+                            if (msg.isRequest()) {
+                                RequestParser request = new RequestParser(msg);
+
+                                if (request.getMethodName().equals("logIn")) {
+                                    messenger.write(logIn((String) request.getParametr()));
+                                }
+                                if (request.getMethodName().equals("logOut")) {
+                                    messenger.write(logOut((String) request.getParametr()));
+                                }
+                                if (request.getMethodName().equals("getTasks")) {
+                                    messenger.write(getTasks());
+                                }
+                                if (request.getMethodName().equals("addTask")) {
+                                    messenger.write(addTask((Task) request.getParametr()));
+                                }
+                                if (request.getMethodName().equals("editTask")) {
+                                    messenger.write(editTask((Task) request.getParametr()));
+                                }
+                                if (request.getMethodName().equals("removeTask")) {
+                                    messenger.write(removeTask((String) request.getParametr()));
+                                }
+                            }
+                            if (doUpdate)
+                                    doUpdate();
+                            messenger.leaving();
+                        }
+                        errorCount = 0;
                     } catch (ParseException ex) {
                         log.error("Command parsing error.", ex);
-                    } 
-              }
-              
-            } while (!clientSocket.isClosed());
-             log.info("Closing stream.");
-        } catch (IOException ex) {
-            log.error("socket i/o error occured",ex);
-        } catch (JDOMException ex) {
-            log.error("Parsing message error.", ex);
-//        } catch (ClassNotFoundException impossible) {
-//            log.error("Class wasn't found", impossible);
+                    } catch (IllegalAccessException ex) {
+                        //log.error("Cannot access with given userName :" + request.getParametr());
+                        log.error(ex.getMessage());
+                    } catch (InterruptedException ex) {
+                        log.error("interrupt error", ex);
+                    } catch (IOException ex) {
+                        errorCount++;
+                        log.error("Socket (" + ((clientSocket.isClosed()) ? "dead" : "alive") + ") i/o streams error occured", ex);
+                        try {
+                            /* 
+                             * here is the shame, and I think I don't understand something (cause here must be something else)
+                             * not such ugly counter of errors, I think.
+                             */
+                            if (errorCount > 3) {
+                                logOut(login);
+                                taskController.stopService();
+                                // TODO: move this logic to method of stopService() of ControllerIface
+                                log.fatal("More than 3 remote errors occured in succession. Connection and user session closed.");
+                                break;
+                            }
+                        } catch (IllegalAccessException ex2) {
+                            log.error(ex2.getMessage());
+                        }
+                    }
+                } while (loggedIn != false);
+                log.info("Closing streams.");
+            } while (clientSocket.isConnected());
         } finally {
             try {
-                if (reader != null) {
-                    reader.close();
-                    log.info ("reader closed");
-                }
-                if (writer != null) {
-                    writer.close();
-                    log.info ("writer closed");
+                if (messenger != null) {
+                    messenger.close();
+                    log.info("messager closing");
                 }
                 if (clientSocket != null) {
                     clientSocket.close();
@@ -123,5 +256,64 @@ public class ServWorker implements Runnable {
             }
         }
     }
+
+    public void update() {
+        doUpdate = true;
+    }
     
+    public void doUpdate() {
+        if (loggedIn/* && !updated*/) {
+            try {
+                doUpdate = false;
+                log.debug("trying to lock messenger by update");
+                messenger.checkOwners();
+                synchronized (messenger) {
+                    messenger.owned();
+                    log.debug("locked messenger by update");
+                    
+                    messenger.write(NetProtocol.ServerSide.requestUpdate());
+                    log.info("Update request sent to Client(" + login + ")");
+                    updated = true;//FIXME: crutch
+
+                    /*
+                     * Timer for waiting response
+                     *  is that needed? in protocol I wrote "MAYBE sever wante to catch response after such requests" :)
+                     */
+                    messenger.leaving();
+                }
+            } catch (IOException ex) {
+                log.error("Writing requestUpdate in stream error.", ex);
+            }
+        } else {
+            log.info("Cannot send requestUpdate - Client (" + login + ") logged out.");
+        }
+    }
+
+    public void taskNotify(Task task) {
+        if (loggedIn) {
+            try {
+                log.debug("trying to lock messenger by taskNotify");
+                messenger.checkOwners();
+                synchronized (messenger) {
+                    log.debug("locked messenger by update");
+                    updated = false; //FIXME: crutch
+                    messenger.write(NetProtocol.ServerSide.requestTaskNotify(task));
+                    log.info("Update request sent to Client");
+                }
+                doUpdate();
+            } catch (IOException ex) {
+                log.error("Writing requestUpdate in stream error.", ex);
+            }
+        } else {
+            log.info("Cannot send request - Client logged out.");
+        }
+    }
+
+    void stopService() {
+        try {
+            logOut(login);
+        } catch (IllegalAccessException ex) {
+            log.error(login + "\'s service stopped with error.");
+        }
+    }
 }

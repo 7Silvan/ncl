@@ -5,12 +5,15 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author Silvan
  */
 public class StopMonitor extends Thread {
+    
+    private static final Logger log = Logger.getLogger(MultiConnectCatcher.class);
     
     private ServerSocket serverSocket;
     private final String passFrase = "stop";
@@ -27,7 +30,7 @@ public class StopMonitor extends Thread {
  
     @Override
     public void run() {
-        System.out.println("stop monitor thread listening on: "+ serverSocket.getInetAddress()+":"+serverSocket.getLocalPort());
+        log.info("stop monitor thread listening on: "+ serverSocket.getInetAddress()+":"+serverSocket.getLocalPort());
         Socket socket = null;
         BufferedReader reader;
         try {

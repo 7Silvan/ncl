@@ -43,6 +43,10 @@ public interface ControllerIface {
 
     public void editTask(String idWas, String newName, String newDescription, String newDate) throws InvalidTaskException, InternalControllerException;
 
+    /**
+     * Can throw InternalControllerException extended from RuntimeEx.
+     * @return Collection of tasks
+     */
     public Collection<Task> getTasks();
 
     public void addListener(Listener listener);

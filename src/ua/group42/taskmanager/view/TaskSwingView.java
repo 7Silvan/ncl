@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +16,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.apache.log4j.*;
-import ua.group42.taskmanager.configuration.ConfigReader;
 import ua.group42.taskmanager.control.ControllerIface;
 import ua.group42.taskmanager.control.InternalControllerException;
 import ua.group42.taskmanager.model.*;
@@ -33,7 +31,6 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
     
     private static final Logger log = Logger.getLogger(TaskSwingView.class);
     
-    private static final String CONFIG_FILE = "config.xml";
     private SimpleDateFormat sdf = null;
     
     private static volatile TaskSwingView instance;
@@ -56,6 +53,7 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
     public boolean regController(ControllerIface control) {
         if (controller == null) {
             controller = control;
+            instance.sdf = new SimpleDateFormat(instance.getControl().getDateFormat());
             return true;
         } else {
             return false;
@@ -70,7 +68,6 @@ public class TaskSwingView extends TaskAbstractView implements MainView {
         if (instance == null) {
             instance = new TaskSwingView();
             instance.subscribeView(instance);
-            instance.sdf = new SimpleDateFormat(instance.getControl().getDateFormat());
         }
         return instance;
     }

@@ -59,13 +59,11 @@ public class StartWrapper implements StartWrapperIface, Notifiable, Updatable {
             } while (!matched);
         } catch (BadConfigException ex) {
             log.fatal("Configuration creating process error", ex);
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Configuration creating process error. App will halt",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Configuration creating process error. App will halt", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         } catch (IOException ex) {
             log.fatal("IO Error", ex);
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "IO Error with reading \"" + CONFIG_FILE + "\". App will halt",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "IO Error with reading \"" + CONFIG_FILE + "\". App will halt", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
 

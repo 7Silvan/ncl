@@ -16,8 +16,11 @@ public class TaskViewFactory {
 
     public static TaskView init(ControllerIface control) {
         MainView view = (MainView) createView(TypeView.main, null);
+        log.debug("Created main view.");
         view.regController(control);
+        log.debug("Reggistered given controller.");
         view.update();
+        log.debug("Updated main view.");
         return (TaskView)view;
     }
     

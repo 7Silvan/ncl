@@ -36,16 +36,11 @@ public final class ConfigReader {
     private ConfigReader() {
     }
 
-//    public ConfigReader(String CONFIG_FILE) throws IOException, BadConfigException {
-//        readConfig(CONFIG_FILE);
-//    }
-
     public void readConfig(String configFileName) throws IOException, BadConfigException {
         Boolean valid = Tools.valXML(configFileName);
         if (valid) {
             config = new Config();
             try {
-
                 SAXBuilder builder = new SAXBuilder();
                 doc = builder.build(configFileName);
 
@@ -55,9 +50,15 @@ public final class ConfigReader {
                 DaoSets daoS = config.setDaoSets(dao.getChildText("class"));
                 List<Element> daoPaths = dao.getChildren("userTaskList");
                 for (Element path : daoPaths) {
-                    daoS.addUserTaskListPath(
-                            path.getAttributeValue("name"), 
-                            path.getTextTrim());
+                    if (path.getAttribute("preferred")!= null && path.getAttribute("preferred").equals("true"))
+                        daoS.addUserTaskListPath(
+                                path.getAttributeValue("name"), 
+                                path.getTextTrim(),
+                                true);
+                    else
+                        daoS.addUserTaskListPath(
+                                path.getAttributeValue("name"), 
+                                path.getTextTrim());
                 }
 
                 Element server = rootElement.getChild("server");
@@ -108,18 +109,26 @@ public final class ConfigReader {
         return className;
     }
 
-    public String getFileName() {
+    public String getFileName(String name) {
         if (config == null) {
             throw new IllegalAccessError("ConfigFile wasn't read yet.");
         }
         String path = null;
         try {
-            path = config.getPath();
+            path = (name == null)? config.getPath():config.getPath(name);
         } catch (BadConfigException ex) {
             log.error("Errors with extracting params from config", ex);
             throw new InternalControllerException("Errors with extracting params from config", ex);
         }
         return path;
+    }
+    
+    /**
+     * In this case method will return path of 
+     * @return 
+     */
+    public String getFileName() {
+        return getFileName(null);
     }
 
     public int getPostponeTime() {

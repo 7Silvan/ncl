@@ -30,52 +30,80 @@ public class ServerSideWrapper implements ServerSideWrapperIface {
     private ConfigReader confReader = ConfigReader.getInstance();
     private MultiConnectCatcher conCatcher;
     private String CONFIG_FILE = "config.xml";
+    private Thread stopper = null;
+    private Boolean isStopped = false;
+    
+    public void secret() {
+        conCatcher.secret();
+    }
 
+    //<editor-fold defaultstate="collapsed" desc="Manipulations with users">
+    public Boolean checkUserExistence(String name) throws IllegalAccessException {
+        if (!users.containsKey(name)) {
+            log.error("There is no user with such name \"" + name + "\"");
+            gui.showError("There is no user with such name \"" + name + "\"");
+            throw new IllegalAccessException("There is no user with such name \"" + name + "\"");
+        }
+        return true;
+    }
+    
     @Override
-    public void banUser(String name) {
+    public Boolean isUserBanned(String name) throws IllegalAccessException {
+        checkUserExistence(name);
+        return users.get(name).isBanned();
+        
+    }
+    
+    @Override
+    public void banUser(String name) throws IllegalAccessException {
+        checkUserExistence(name);
         users.get(name).setState(UserModel.State.BANNED);
         gui.update();
     }
-
+    
     /**
      * user has been unBanned become offline status and can try to connect to server
      * @param name of user
      */
     @Override
-    public void unBanUser(String name) {
+    public void unBanUser(String name) throws IllegalAccessException {
+        checkUserExistence(name);
         users.get(name).setState(UserModel.State.OFFLINE);
+        // TODO: doDisConnect?
         gui.update();
     }
-
+    
     @Override
-    public void regUser(String name) {
+    public void regUser(String name) throws IllegalAccessException {
         if (!users.containsKey(name)) {
             users.put(name, new UserModel(name));
             gui.update();
             writeUsers(confReader.getServerSets().getPath(),
                     users.values());
+            log.info("User \"" + name + "\" created.");
         } else {
-            gui.showError("user with name " + name + " already exist");
+            log.error("Cannot register the user with such name \"" + name + "\" already exist");
+            gui.showError("Cannot register the user with such name \"" + name + "\" already exist");
+            throw new IllegalAccessException("Cannot register the user with such name \"" + name + "\" already exist");
         }
     }
-
+    
     @Override
-    public void delUser(String name) {
-        if (users.containsKey(name)) {
-            users.remove(name);
-            gui.update();
-            writeUsers(confReader.getServerSets().getPath(),
-                    users.values());
-        } else {
-            gui.showError("there is no user with name " + name);
-        }
+    public void delUser(String name) throws IllegalAccessException {
+        checkUserExistence(name);
+        // TODO: doDisConnect and stopService?
+        // doDisConnect(name);
+        users.remove(name);
+        gui.update();
+        writeUsers(confReader.getServerSets().getPath(),
+                users.values());
     }
-
+    
     @Override
     public Collection<UserModel> getAllUsers() {
         return users.values();
     }
-
+    
     @Override
     public Collection getActiveUsers() {
         Collection<UserModel> activeUsers = new ArrayList<UserModel>();
@@ -88,35 +116,74 @@ public class ServerSideWrapper implements ServerSideWrapperIface {
         }
         return null;
     }
-
+    
     @Override
     public int getWorkPort() {
         return Integer.parseInt(confReader.getParam("portWork"));
     }
-
+    
     @Override
     public int getStopPort() {
         return Integer.parseInt(confReader.getParam("portStop"));
     }
-
+    
     @Override
-    public boolean canConnect(String name) throws IllegalAccessException {
-        if (users.containsKey(name)) {
-            return (users.get(name).getState() == State.OFFLINE);
+    public Boolean canConnect(String name) throws IllegalAccessException {
+        checkUserExistence(name);
+        return (users.get(name).getState() == State.OFFLINE);
+    }
+    
+    @Override
+    public Boolean doConnect(String name) throws IllegalAccessException {
+        if (canConnect(name)) {
+            synchronized (users) {
+                users.get(name).setState(State.ONLINE);
+            }
+            log.info(name + " marked as connected.");
+            gui.update();
+            return true;
         } else {
-            gui.showError("there is no user with name " + name);
-            throw new IllegalAccessException("there is no user with name \"" + name + "\"");
+            gui.showError("Cannot connect. There is no user with name " + name);
+            throw new IllegalAccessException("Cannot connect. There is no user with name \"" + name + "\"");
         }
     }
     
     @Override
-    public UserModel getUser(String name) throws IllegalAccessException {
-        if (users.containsKey(name)) {
-            return users.get(name);
-        } else {
-            gui.showError("there is no user with name " + name);
-            throw new IllegalAccessException("there is no user with name \"" + name + "\"");
+    public Boolean doDisConnect(String name) throws IllegalAccessException {
+        canDisConnect(name);
+        
+        synchronized (users) {
+            getUser(name).setState(State.OFFLINE);
         }
+        log.info(name + " marked as disconnected.");
+        gui.update();
+        return true;
+    }
+    
+    @Override
+    public Boolean canDisConnect(String name) throws IllegalAccessException {
+        checkUserExistence(name);
+        return (users.get(name).getState() == State.ONLINE);
+    }
+    
+    private UserModel getUser(String name) throws IllegalAccessException {
+        checkUserExistence(name);
+        return users.get(name);
+    }
+    
+    @Override
+    public Boolean isUserOnline(String name) throws IllegalAccessException {
+        checkUserExistence(name);
+        return (users.get(name).getState() == State.ONLINE);
+    }
+    //</editor-fold>
+////////////////////////////////////////////////////////////////////////////////
+    public static void main(String args[]) {
+        instance = new ServerSideWrapper();
+    }
+
+    public ServerSideWrapper() {
+        init();
     }
 
     private void init() {
@@ -139,14 +206,17 @@ public class ServerSideWrapper implements ServerSideWrapperIface {
             new Thread(conCatcher).start();
 
             try {
-                Thread stopper = new StopMonitor(Integer.parseInt(confReader.getParam("portStop")));
-                stopper.start();
-                stopper.join();
+//                stopper = new StopMonitor(Integer.parseInt(confReader.getParam("portStop")));
+//                stopper.start();
+//                stopper.join();
+                while (!isStopped) {
+                    Thread.sleep(1000);
+                }
             } catch (InterruptedException ex) {
-                log.error(ex);
-            } catch (NumberFormatException ex) {
-                log.fatal("bad parametr, server will fall down");
-                System.exit(0);
+                log.error("Stopper has been interrupted.", ex);
+//            } catch (NumberFormatException ex) {
+//                log.fatal("bad parametr, server will fall down");
+//                System.exit(0);
             }
 
             log.info("stopping server");
@@ -164,14 +234,6 @@ public class ServerSideWrapper implements ServerSideWrapperIface {
                     JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
-    }
-
-    public ServerSideWrapper() {
-        init();
-    }
-
-    public static void main(String args[]) {
-        instance = new ServerSideWrapper();
     }
 
     private Map<String, UserModel> readUsers(String path) {
@@ -217,10 +279,8 @@ public class ServerSideWrapper implements ServerSideWrapperIface {
             while (user.hasNext()) {
                 UserModel curUser = user.next();
                 doc.getRootElement().addContent(new Element("user").addContent(curUser.getName()).setAttribute("banned", (curUser.isBanned()) ? "true" : "false"));
-                //writer.println(user.next().getName());
             }
             XMLOutputter outPutter = new XMLOutputter(Format.getRawFormat().setIndent(" ").setLineSeparator("\n"));
-
             outPutter.output(doc, new FileWriter(path));
         } catch (IOException ex) {
             log.error("Error with writing userList", ex);
@@ -239,5 +299,15 @@ public class ServerSideWrapper implements ServerSideWrapperIface {
         return;
     }
 
-    
+////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public ConfigReader getConfig() {
+        return confReader;
+    }
+
+    @Override
+    public void stopServer() {
+//        stopper.interrupt();
+        isStopped = true;
+    }
 }

@@ -12,6 +12,7 @@ public class UserModel {
     }
     private String name;
     private State state;  //wheter state is online or offline or banned;
+    private ServWorker worker;
 
     public UserModel(String name) {
         this.name = name;
@@ -33,4 +34,12 @@ public class UserModel {
     public boolean isBanned() {
         return (state == State.BANNED);
     }
+
+    public ServWorker getWorker() {
+        return worker;
+    }
+
+    public void setWorker(ServWorker worker) {
+        this.worker = worker;
+    }    
 }

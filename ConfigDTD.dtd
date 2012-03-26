@@ -20,4 +20,5 @@ name CDATA #REQUIRED>
 <!ELEMENT params (param*)>
 <!ELEMENT param (#PCDATA)>
 <!ATTLIST param
-name CDATA #REQUIRED>
+name CDATA #REQUIRED
+preferred (true|false) #IMPLIED>

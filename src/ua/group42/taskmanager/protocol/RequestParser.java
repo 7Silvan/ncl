@@ -24,12 +24,14 @@ public class RequestParser {
         private void parse() throws ParseException {
             methodName = msg.getDoc().getRootElement().getChildText("methodName");
             if (methodName.equalsIgnoreCase("logIn") ||
-                methodName.equalsIgnoreCase("logOut") ||
-                methodName.equalsIgnoreCase("removeTask"))
+                    methodName.equalsIgnoreCase("logOut") ||
+                    methodName.equalsIgnoreCase("removeTask"))
                 parametr = msg.getDoc().getRootElement().getChild("params")
                         .getChild("param").getChild("value").getChildText("string");
+            
             if (methodName.equalsIgnoreCase("addTask") ||
-                methodName.equalsIgnoreCase("editTask"))
+                    methodName.equalsIgnoreCase("editTask") ||
+                    methodName.equalsIgnoreCase("taskNotify"))
                 parametr = NetProtocol.structToTask(msg.getDoc().getRootElement().getChild("params")
                         .getChild("param").getChild("value").getChild("struct"));
         }
@@ -39,13 +41,12 @@ public class RequestParser {
         }
 
         public Object getParametr() {
-            if (parametr == null) { 
-                log.error("Access denied. Object doesn't exist.");
-                throw new IllegalAccessError("Access denied. Object doesn't exist.");
-            }
+//            if (parametr == null) { 
+//                log.error("Access denied. Object doesn't exist.");
+//                throw new IllegalAccessError("Access denied. Object doesn't exist.");
+//            }
             return parametr;
         }
-        
         
     }
     

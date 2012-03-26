@@ -13,17 +13,17 @@ RequestParser.java
 K 25
 svn:wc:ra_dav:version-url
 V 98
-/svn/twopals_ncl/!svn/ver/48/Task%20Manager/src/ua/group42/taskmanager/protocol/RequestParser.java
+/svn/twopals_ncl/!svn/ver/51/Task%20Manager/src/ua/group42/taskmanager/protocol/RequestParser.java
 END
 NetProtocol.java
 K 25
 svn:wc:ra_dav:version-url
 V 96
-/svn/twopals_ncl/!svn/ver/48/Task%20Manager/src/ua/group42/taskmanager/protocol/NetProtocol.java
+/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/protocol/NetProtocol.java
 END
 ResponseParser.java
 K 25
 svn:wc:ra_dav:version-url
 V 99
-/svn/twopals_ncl/!svn/ver/48/Task%20Manager/src/ua/group42/taskmanager/protocol/ResponseParser.java
+/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/protocol/ResponseParser.java
 END

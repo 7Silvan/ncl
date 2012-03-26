@@ -13,13 +13,13 @@ TaskController.java
 K 25
 svn:wc:ra_dav:version-url
 V 98
-/svn/twopals_ncl/!svn/ver/47/Task%20Manager/src/ua/group42/taskmanager/control/TaskController.java
+/svn/twopals_ncl/!svn/ver/51/Task%20Manager/src/ua/group42/taskmanager/control/TaskController.java
 END
 ControllerIface.java
 K 25
 svn:wc:ra_dav:version-url
 V 99
-/svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/control/ControllerIface.java
+/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/control/ControllerIface.java
 END
 DAOFactory.java
 K 25

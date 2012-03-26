@@ -7,13 +7,13 @@ Config.java
 K 25
 svn:wc:ra_dav:version-url
 V 96
-/svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/configuration/Config.java
+/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/configuration/Config.java
 END
 ConfigReader.java
 K 25
 svn:wc:ra_dav:version-url
 V 102
-/svn/twopals_ncl/!svn/ver/47/Task%20Manager/src/ua/group42/taskmanager/configuration/ConfigReader.java
+/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/configuration/ConfigReader.java
 END
 BadConfigException.java
 K 25
