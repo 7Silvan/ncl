@@ -1,0 +1,137 @@
+10:02:15,410  INFO main Tools:65 - File "config.xml" is valid
+10:02:16,592 FATAL main DAOFactory:32 - Error DAO Initializing  occured
+java.lang.ClassNotFoundException: ua.group42.taskmanager.control.data.XmlDAO
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:307)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:248)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:169)
+	at ua.group42.taskmanager.control.DAOFactory.getDAO(DAOFactory.java:27)
+	at ua.group42.taskmanager.control.TaskController.<init>(TaskController.java:229)
+	at ua.group42.taskmanager.StartWrapper.main(StartWrapper.java:71)
+10:02:30,257  INFO main Tools:65 - File "config.xml" is valid
+10:02:31,638 FATAL main DAOFactory:32 - Error DAO Initializing  occured
+java.lang.ClassNotFoundException: ua.group42.taskmanager.control.data.XmlDAO
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:307)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:248)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:169)
+	at ua.group42.taskmanager.control.DAOFactory.getDAO(DAOFactory.java:27)
+	at ua.group42.taskmanager.control.TaskController.<init>(TaskController.java:229)
+	at ua.group42.taskmanager.StartWrapper.main(StartWrapper.java:71)
+10:02:44,810  INFO main Tools:65 - File "config.xml" is valid
+10:02:45,707 FATAL main DAOFactory:32 - Error DAO Initializing  occured
+java.lang.ClassNotFoundException: ua.group42.taskmanager.control.data.XmlDAO
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:307)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:248)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:169)
+	at ua.group42.taskmanager.control.DAOFactory.getDAO(DAOFactory.java:27)
+	at ua.group42.taskmanager.control.TaskController.<init>(TaskController.java:229)
+	at ua.group42.taskmanager.StartWrapper.main(StartWrapper.java:71)
+10:03:06,347  INFO main Tools:65 - File "config.xml" is valid
+10:03:07,448 FATAL main DAOFactory:32 - Error DAO Initializing  occured
+java.lang.ClassNotFoundException: ua.group42.taskmanager.control.data.XmlDAO
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:307)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:248)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:169)
+	at ua.group42.taskmanager.control.DAOFactory.getDAO(DAOFactory.java:27)
+	at ua.group42.taskmanager.control.TaskController.<init>(TaskController.java:229)
+	at ua.group42.taskmanager.StartWrapper.main(StartWrapper.java:71)
+10:07:27,490  INFO main Tools:65 - File "config.xml" is valid
+10:07:28,689 DEBUG main TaskController:230 - Dao matched and configured.
+10:07:28,690 DEBUG main TaskController:261 - entering startDaemon()
+10:07:28,695  INFO main Tools:65 - File ".\tasks.xml" is valid
+10:07:28,709 DEBUG main TaskController:233 - Daemon Started.
+10:07:28,724  INFO Thread-3 TaskController:356 - in Ticker run(): currentThread() is Thread-3
+10:07:29,145 DEBUG main TaskViewFactory:32 - Passing link on TaskSwingView.
+10:07:29,162 DEBUG main TaskViewFactory:19 - Created main view.
+10:07:29,162 DEBUG main TaskViewFactory:21 - Reggistered given controller.
+10:07:29,164 DEBUG main TaskViewFactory:23 - Updated main view.
+10:07:29,308 DEBUG main StartWrapper:83 - SysTray started.
+10:07:29,313 DEBUG main TaskAbstractView:65 - main-view showed
+10:07:35,819  INFO AWT-EventQueue-0 TaskController:305 - Asked for stopping service. Stopping ...
+10:08:55,097  INFO main Tools:65 - File "config.xml" is valid
+10:08:55,841 DEBUG main TaskController:230 - Dao matched and configured.
+10:08:55,842 DEBUG main TaskController:261 - entering startDaemon()
+10:08:55,848  INFO main Tools:65 - File ".\tasks.xml" is valid
+10:08:55,862 DEBUG main TaskController:233 - Daemon Started.
+10:08:55,887  INFO Thread-3 TaskController:356 - in Ticker run(): currentThread() is Thread-3
+10:08:56,171 DEBUG main TaskViewFactory:32 - Passing link on TaskSwingView.
+10:08:56,205 DEBUG main TaskViewFactory:19 - Created main view.
+10:08:56,206 DEBUG main TaskViewFactory:21 - Reggistered given controller.
+10:08:56,208 DEBUG main TaskViewFactory:23 - Updated main view.
+10:08:56,311 DEBUG main StartWrapper:83 - SysTray started.
+10:08:56,317 DEBUG main TaskAbstractView:65 - main-view showed
+10:09:12,806  INFO AWT-EventQueue-0 TaskController:305 - Asked for stopping service. Stopping ...
+10:09:12,889 DEBUG Thread-3 TaskController:371 - Ticker finished.
+10:10:00,591  INFO main Tools:65 - File "config.xml" is valid
+10:10:01,603 FATAL main DAOFactory:32 - Error DAO Initializing  occured
+java.lang.ClassNotFoundException: ua.group42.taskmanager.control.data.XmlDAO
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:307)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:248)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:169)
+	at ua.group42.taskmanager.control.DAOFactory.getDAO(DAOFactory.java:27)
+	at ua.group42.taskmanager.control.TaskController.<init>(TaskController.java:229)
+	at ua.group42.taskmanager.StartWrapper.main(StartWrapper.java:71)
+10:19:37,747  INFO main Tools:65 - File "config.xml" is valid
+10:19:38,801 FATAL main DAOFactory:32 - Error DAO Initializing  occured
+java.lang.ClassNotFoundException: ua.group42.taskmanager.control.data.XmlDAO
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:307)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:248)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:169)
+	at ua.group42.taskmanager.control.DAOFactory.getDAO(DAOFactory.java:27)
+	at ua.group42.taskmanager.control.TaskController.<init>(TaskController.java:229)
+	at ua.group42.taskmanager.StartWrapper.main(StartWrapper.java:71)
+10:20:35,677  INFO main Tools:65 - File "config.xml" is valid
+10:20:36,922 DEBUG main TaskController:230 - Dao matched and configured.
+10:20:36,923 DEBUG main TaskController:261 - entering startDaemon()
+10:20:36,931  INFO main Tools:65 - File ".\tasks.xml" is valid
+10:20:36,942 DEBUG main TaskController:233 - Daemon Started.
+10:20:36,976  INFO Thread-3 TaskController:356 - in Ticker run(): currentThread() is Thread-3
+10:20:37,186 DEBUG main TaskViewFactory:32 - Passing link on TaskSwingView.
+10:20:37,205 DEBUG main TaskViewFactory:19 - Created main view.
+10:20:37,205 DEBUG main TaskViewFactory:21 - Reggistered given controller.
+10:20:37,206 DEBUG main TaskViewFactory:23 - Updated main view.
+10:20:37,371 DEBUG main StartWrapper:83 - SysTray started.
+10:20:37,378 DEBUG main TaskAbstractView:65 - main-view showed
+10:20:46,125  INFO AWT-EventQueue-0 TaskController:305 - Asked for stopping service. Stopping ...
+10:28:00,015  INFO main Tools:65 - File "config.xml" is valid
+10:28:00,962 DEBUG main TaskController:230 - Dao matched and configured.
+10:28:00,963 DEBUG main TaskController:261 - entering startDaemon()
+10:28:00,968  INFO main Tools:65 - File ".\tasks.xml" is valid
+10:28:00,983 DEBUG main TaskController:233 - Daemon Started.
+10:28:00,993  INFO Thread-3 TaskController:356 - in Ticker run(): currentThread() is Thread-3
+10:28:01,310 DEBUG main TaskViewFactory:32 - Passing link on TaskSwingView.
+10:28:01,324 DEBUG main TaskViewFactory:19 - Created main view.
+10:28:01,328 DEBUG main TaskViewFactory:21 - Reggistered given controller.
+10:28:01,329 DEBUG main TaskViewFactory:23 - Updated main view.
+10:28:01,468 DEBUG main StartWrapper:83 - SysTray started.
+10:28:01,474 DEBUG main TaskAbstractView:65 - main-view showed
+10:28:04,543  INFO AWT-EventQueue-0 TaskController:305 - Asked for stopping service. Stopping ...

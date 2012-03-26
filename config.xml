@@ -11,7 +11,7 @@
 <config>
     <dao>
         <class>ua.group42.taskmanager.control.data.XmlDAO</class>
-        <userTaskList name="singleUser">tasks.xml</userTaskList>
+        <userTaskList name="singleUser">.\tasks.xml</userTaskList>
         <userTaskList name="admin">.\adminTasks.xml</userTaskList>
         <userTaskList name="user1User">.\user1Tasks.xml</userTaskList>
         <userTaskList name="user2User">.\user2Tasks.xml</userTaskList>
