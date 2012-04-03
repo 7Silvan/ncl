@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/configuration
+END
+Config.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/twopals_ncl/!svn/ver/56/Task%20Manager/src/ua/group42/taskmanager/common/configuration/Config.java
+END
+ConfigReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/twopals_ncl/!svn/ver/56/Task%20Manager/src/ua/group42/taskmanager/common/configuration/ConfigReader.java
+END
+BadConfigException.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/configuration/BadConfigException.java
+END

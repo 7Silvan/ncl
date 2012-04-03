@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Task Manager" default="run-client" basedir=".">
+    <description>Build-file for Client-Server  Task Manager</description>
+    <property name="build" location="cls" />
+    <property name="dist" location="dist" />
+    <property name="lib" location="lib" />
+    <property name="dist-client" location="dist-client" />
+    <property name="dist-server" location="dist-server" />
+    <property name="src" location="src" />
+    <property name="serverMainClass" value="ua.group42.taskmanager.server.ServerWrapper" />
+    <property name="clientMainClass" value="ua.group42.taskmanager.client.ClientWrapper" />
+    <path id="classpath">
+        <fileset dir="${lib}" >
+            <include name="**/*.jar" />
+            <include name="**/*.dll" />
+        </fileset>
+    </path>
+    
+    <target name=   "run-client">
+        <java fork="true" classname="${clientMainClass}">
+            <classpath>
+                <path refid="classpath"/>
+                <path location="${lib}" />
+                <path location="${dist-client}/client.jar"/>
+            </classpath>
+            
+        </java>
+    </target>
+    
+</project>

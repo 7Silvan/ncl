@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/control
+END
+InternalControllerException.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/control/InternalControllerException.java
+END
+TaskController.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/control/TaskController.java
+END
+ControllerIface.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/control/ControllerIface.java
+END
+DAOFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/control/DAOFactory.java
+END

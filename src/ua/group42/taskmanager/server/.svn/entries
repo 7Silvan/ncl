@@ -1,14 +1,14 @@
 10
 
 dir
-46
+51
 http://twopals.unfuddle.com/svn/twopals_ncl/Task%20Manager/src/ua/group42/taskmanager/server
 http://twopals.unfuddle.com/svn/twopals_ncl
 
 
 
-2012-02-29T09:31:53.339348Z
-46
+2012-03-26T05:47:50.857648Z
+51
 Silvan
 
 
@@ -25,188 +25,10 @@ Silvan
 
 
 15206f50-e3e4-41af-8b87-5814f47267a5
-
-
-
-
-
-
-
-empty
 
 UserModel.java
 file
-50
-
-
-
-2012-03-07T15:04:56.738716Z
-e59236d7402b34acb7480b038055c1e5
-2012-03-25T18:35:11.616698Z
-50
-Silvan
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-821
-
-ServerGuiIface.java
-file
-
-
-
-
-2012-02-22T07:03:08.177006Z
-c57c9fa96b14d82b0270a39f981a9721
-2012-02-29T09:31:53.339348Z
-46
-Silvan
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-174
-
-ServGUI.java
-file
-51
-
-
-
-2012-03-25T20:38:09.233723Z
-0ebd9833a2538344bb684bb274ad72e8
-2012-03-26T05:47:50.857648Z
-51
-Silvan
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-7581
-
-ServerSideWrapperIface.java
-file
-51
-
-
-
-2012-03-25T20:36:20.927529Z
-e1627e76df13b6ccb66164bf76656711
-2012-03-26T05:47:50.857648Z
-51
-Silvan
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-1293
-
-ServWorker.java
-file
-51
-
-
-
-2012-03-26T05:29:50.344014Z
-36261cc1d4d94f8649c7a8951423018d
-2012-03-26T05:47:50.857648Z
-51
-Silvan
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-12501
-
-ServConnector.java
-file
-48
+54
 
 
 
@@ -228,16 +50,16 @@ file
 
 deleted
 
-ServerSideWrapper.java
+ServerWrapperIface.java
 file
-51
+55
 
 
 
-2012-03-25T20:33:51.413977Z
-77ffe89db8860945f7ebb46b00a0d0a6
-2012-03-26T05:47:50.857648Z
-51
+2012-03-30T09:15:35.510169Z
+fd6c84a6a3f7fe098e58eaf32f8e62cf
+2012-04-02T15:50:40.797497Z
+55
 Silvan
 
 
@@ -260,19 +82,174 @@ Silvan
 
 
 
-10971
+1296
+
+model
+dir
+
+ServerGuiIface.java
+file
+54
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+ServGUI.java
+file
+54
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+ServerSideWrapperIface.java
+file
+55
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+net
+dir
+
+ServerWrapper.java
+file
+56
+
+
+
+2012-04-03T09:42:57.597632Z
+d0182c8073d9b30fad9854511458e1f0
+2012-04-03T10:24:57.586425Z
+56
+Silvan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10109
+
+ServWorker.java
+file
+55
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+view
+dir
+
+ServerSideWrapper.java
+file
+55
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
 
 ServerSideProxy.java
 file
-50
-
-
-
-2012-03-08T04:55:43.968111Z
-126805f1084f5477c77f11feb17bcdee
-2012-03-25T18:35:11.616698Z
-50
-Silvan
+55
 
 
 
@@ -292,21 +269,11 @@ Silvan
 
 
 
-
-
-563
+deleted
 
 StopMonitor.java
 file
-50
-
-
-
-2012-03-07T14:01:57.140535Z
-21a6ae28ba9a796225013c851e49abc8
-2012-03-25T18:35:11.616698Z
-50
-Silvan
+55
 
 
 
@@ -326,21 +293,11 @@ Silvan
 
 
 
-
-
-1504
+deleted
 
 MultiConnectCatcher.java
 file
-51
-
-
-
-2012-03-25T20:33:14.347857Z
-d84a87a95ed3317df18366fd05f0067d
-2012-03-26T05:47:50.857648Z
-51
-Silvan
+55
 
 
 
@@ -360,7 +317,5 @@ Silvan
 
 
 
-
-
-2683
+deleted
 

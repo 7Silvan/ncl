@@ -1,59 +1,17 @@
 K 25
 svn:wc:ra_dav:version-url
 V 77
-/svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/server
+/svn/twopals_ncl/!svn/ver/51/Task%20Manager/src/ua/group42/taskmanager/server
 END
-UserModel.java
+ServerWrapperIface.java
 K 25
 svn:wc:ra_dav:version-url
-V 92
-/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/server/UserModel.java
+V 101
+/svn/twopals_ncl/!svn/ver/55/Task%20Manager/src/ua/group42/taskmanager/server/ServerWrapperIface.java
 END
-ServerGuiIface.java
+ServerWrapper.java
 K 25
 svn:wc:ra_dav:version-url
-V 97
-/svn/twopals_ncl/!svn/ver/46/Task%20Manager/src/ua/group42/taskmanager/server/ServerGuiIface.java
-END
-ServGUI.java
-K 25
-svn:wc:ra_dav:version-url
-V 90
-/svn/twopals_ncl/!svn/ver/51/Task%20Manager/src/ua/group42/taskmanager/server/ServGUI.java
-END
-ServerSideWrapperIface.java
-K 25
-svn:wc:ra_dav:version-url
-V 105
-/svn/twopals_ncl/!svn/ver/51/Task%20Manager/src/ua/group42/taskmanager/server/ServerSideWrapperIface.java
-END
-ServWorker.java
-K 25
-svn:wc:ra_dav:version-url
-V 93
-/svn/twopals_ncl/!svn/ver/51/Task%20Manager/src/ua/group42/taskmanager/server/ServWorker.java
-END
-ServerSideWrapper.java
-K 25
-svn:wc:ra_dav:version-url
-V 100
-/svn/twopals_ncl/!svn/ver/51/Task%20Manager/src/ua/group42/taskmanager/server/ServerSideWrapper.java
-END
-ServerSideProxy.java
-K 25
-svn:wc:ra_dav:version-url
-V 98
-/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/server/ServerSideProxy.java
-END
-StopMonitor.java
-K 25
-svn:wc:ra_dav:version-url
-V 94
-/svn/twopals_ncl/!svn/ver/50/Task%20Manager/src/ua/group42/taskmanager/server/StopMonitor.java
-END
-MultiConnectCatcher.java
-K 25
-svn:wc:ra_dav:version-url
-V 102
-/svn/twopals_ncl/!svn/ver/51/Task%20Manager/src/ua/group42/taskmanager/server/MultiConnectCatcher.java
+V 96
+/svn/twopals_ncl/!svn/ver/56/Task%20Manager/src/ua/group42/taskmanager/server/ServerWrapper.java
 END

@@ -1,14 +1,14 @@
 10
 
 dir
-41
+51
 http://twopals.unfuddle.com/svn/twopals_ncl/Task%20Manager/src/ua/group42/taskmanager
 http://twopals.unfuddle.com/svn/twopals_ncl
 
 
 
-2012-02-13T08:59:19.367807Z
-41
+2012-03-26T05:47:50.857648Z
+51
 Silvan
 
 
@@ -28,24 +28,31 @@ Silvan
 
 control
 dir
-
-model
-dir
-
-tools
-dir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
 
 Updatable.java
 file
-
-
-
-
-2012-02-13T10:48:15.390682Z
-d43c422597869eb3774edc3c5ec10aeb
-2012-02-13T08:59:19.367807Z
-41
-Silvan
+54
 
 
 
@@ -65,104 +72,38 @@ Silvan
 
 
 
-
-
-130
-
-protocol
-dir
+deleted
 
 clientside
 dir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
 
-Listener.java
-file
-
-
-
-
-2012-02-13T10:48:15.393682Z
-541aed13d29e4587ad6b01ddc34c55cc
-2012-02-13T08:59:19.367807Z
-41
-Silvan
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-98
-
-StartWrapperIface.java
-file
-
-
-
-
-2012-02-13T10:48:15.400682Z
-5196ad545633dfc9a565d57dfed344de
-2012-02-13T08:59:19.367807Z
-41
-Silvan
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-326
-
-server
-dir
-
-configuration
-dir
-
-view
+common
 dir
 
 Notifiable.java
 file
-
-
-
-
-2012-02-13T10:48:15.411683Z
-04da333b3ae6b066c38c2240f137036d
-2012-02-13T08:59:19.367807Z
-41
-Silvan
+54
 
 
 
@@ -182,21 +123,185 @@ Silvan
 
 
 
+deleted
+
+tools
+dir
 
 
-185
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+model
+dir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+protocol
+dir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+Listener.java
+file
+54
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+server
+dir
+
+StartWrapperIface.java
+file
+54
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+configuration
+dir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+view
+dir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+client
+dir
 
 StartWrapper.java
 file
-50
-
-
-
-2012-03-09T14:35:21.753085Z
-96ecf41e24f43b9b9676c210409d1494
-2012-03-25T18:35:11.616698Z
-50
-Silvan
+54
 
 
 
@@ -216,7 +321,5 @@ Silvan
 
 
 
-
-
-4595
+deleted
 

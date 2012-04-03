@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/twopals_ncl/!svn/ver/55/Task%20Manager/src/ua/group42/taskmanager/server/net
+END
+ServerProxy.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/twopals_ncl/!svn/ver/55/Task%20Manager/src/ua/group42/taskmanager/server/net/ServerProxy.java
+END
+ServWorker.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/twopals_ncl/!svn/ver/56/Task%20Manager/src/ua/group42/taskmanager/server/net/ServWorker.java
+END
+ConnectionException.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/twopals_ncl/!svn/ver/55/Task%20Manager/src/ua/group42/taskmanager/server/net/ConnectionException.java
+END
+MultiConnectCatcher.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/twopals_ncl/!svn/ver/56/Task%20Manager/src/ua/group42/taskmanager/server/net/MultiConnectCatcher.java
+END

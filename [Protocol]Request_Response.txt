@@ -1,0 +1,406 @@
+///////////////////
+///Protocol List///
+///////////////////
+-----  Client Side Requests (CRq) -----
+// requesting list of tasks
+// request for adding task 
+// request for removing task with (ID)
+// logging _IN_ request
+// logging _OUT_ request
+--- Server Side Requestes ---
+// Notifications about actions/events from server :
+// Task charged
+// Update
+// Client banned (so connection closed and permissions to connect removed)
+<!-- There is no unBanned message, because there is nobody to receive it. -->
+// Service stopped
+-----  Server Side Responses (SRs) -----
+// OK
+// Transfering all client tasks  //TODO: make it array of structs
+--- Server Response Error Types (SRE)---
+// there is 4 types
+// 1: Invalid Parametr
+// 2: Cannot Provide Action
+// 3: Wrong Login name
+// 4: Server (service) Stopped
+// 5: Too many parametrs
+--- Client Side Responses (CRS), maybe server wants to know if notify-operation done successfully
+// OK
+// Error
+
+//////////////////
+///Protocol Map///
+//////////////////
+case 1: some (CRq) -> (SRs) OK | some Error | Transfering all client tasks
+case 2: some (SRq) -> (CRs) OK | Error
+
+
+!!!!!!!!!!! Protocol !!!!!!!!!!!!!
+-----  Client Side Requests  -----
+
+// requesting list of tasks
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>getTasks</methodName>
+    <params>
+    </params>
+</methodCall>
+
+// request for adding task (could be done without struct)
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>addTask</methodName>
+    <params>
+        <param>
+            <value>
+                <struct>
+                    <member>
+                        <name>name</name>
+                        <value><string>Task #1</string></value>
+                    </member>
+                    <member>
+                        <name>desciption</name>
+                        <value><string>some description</string></value>
+                    </member>
+                    <member>
+                        <name>date</name>
+                        <value><string>2012-02-25 12:42:42</string></value>
+                    </member>
+                </struct>    
+            </value>
+        </param>
+    </params>
+</methodCall>
+
+// request for editing task (id for matching, rest of data is task updates)
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>editTask</methodName>
+    <params>
+        <param>
+            <value>
+                <struct>
+                    <member>
+                        <name>id</name>
+                        <value><string>42</string></value>
+                    </member>
+                    <member>
+                        <name>name</name>
+                        <value><string>Task #1</string></value>
+                    </member>
+                    <member>
+                        <name>desciption</name>
+                        <value><string>some description</string></value>
+                    </member>
+                    <member>
+                        <name>date</name>
+                        <value><string>2012-02-25 12:42:42</string></value>
+                    </member>
+                </struct>    
+            </value>
+        </param>
+    </params>
+</methodCall>
+
+// request for removing task with (ID)
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>removeTask</methodName>
+    <params>
+        <param>
+           <value><string>42</string></value>
+        </param>
+    </params>
+</methodCall>
+
+// logging _IN_ request
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>logIn</methodName>
+    <params>
+        <param>
+            <value>
+                <string>login</string>
+            </value>
+        </param>
+    </params>
+</methodCall>
+
+// logging _OUT_ request
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>logOut</methodName>
+    <params>
+        <param>
+            <value>
+                <string>login</string>
+            </value>
+        </param>
+    </params>
+</methodCall>
+
+-----  Server Side Responses  -----
+// OK
+<? xml version="1.0"?>
+<methodResponse>
+    <params>
+        <param>
+            <value><boolean>true</boolean></value>
+        </param>
+    </params>
+</methodResponse>
+
+
+// Transfering all client tasks
+<? xml version="1.0"?>
+<methodResponse>
+    <params>
+        <param>
+            <value><array><data>
+            <value>
+                <struct>
+                    <member>
+                        <name>id</name>
+                        <value><string>42</string></value>
+                    </member>
+                    <member>
+                        <name>name</name>
+                        <value><string>Task #1</string></value>
+                    </member>
+                    <member>
+                        <name>desciption</name>
+                        <value><string>some description</string></value>
+                    </member>
+                    <member>
+                        <name>date</name>
+                        <value><string>2012-02-25 12:42:42</string></value>
+                    </member>
+                </struct>    
+            </value>
+            <value>
+                <struct>
+                    <member>
+                        <name>id</name>
+                        <value><string>42</string></value>
+                    </member>
+                    <member>
+                        <name>name</name>
+                        <value><string>Task #1</string></value>
+                    </member>
+                    <member>
+                        <name>desciption</name>
+                        <value><string>some description</string></value>
+                    </member>
+                    <member>
+                        <name>date</name>
+                        <value><string>2012-02-25 12:42:42</string></value>
+                    </member>
+                </struct>    
+            </value>
+            </value></array></data>
+        </param>
+    </params>
+</methodResponse>
+
+--- Server Response Error Types ---
+// there is 4 types
+// 1: Invalid Parametr
+// 2: Cannot Provide Action
+// 3: Wrong Login name
+// 4: Server (service) Stopped
+// 5: Too many parametrs
+
+// 1: Invalid Parametr
+<? xml version="1.0"?>
+<methodResponse>
+    <fault>
+        <value>
+            <struct>
+                <member>
+                    <name>faultCode</name>
+                    <value><i4>1</i4></value>
+                </member>
+                <member>
+                    <name>faultString</name>
+                    <value><string>Invalid parametr</string></value>
+                </member>
+                <member>
+                    <name>parametrName</name>
+                    <value><string>date</string></value>
+                </member>
+            </struct>
+        </value>
+    </fault>	
+</methodResponse>
+
+// 2: Cannot Provide Action
+<? xml version="1.0"?>
+<methodResponse>
+    <fault>
+        <value>
+            <struct>
+                <member>
+                    <name>faultCode</name>
+                    <value><i4>2</i4></value>
+                </member>
+                <member>
+                    <name>faultString</name>
+                    <value><string>Cannot provide asked action.</string></value>
+                </member>
+                <member>
+                    <name>askedAction</name>
+                    <value><string>methodName</string></value>
+                </member>
+            </struct>
+        </value>
+    </fault>	
+</methodResponse>
+
+// 3: Wrong Login name
+<? xml version="1.0"?>
+<methodResponse>
+    <fault>
+        <value>
+            <struct>
+                <member>
+                    <name>faultCode</name>
+                    <value><i4>3</i4></value>
+                </member>
+                <member>
+                    <name>faultString</name>
+                    <value><string>Wrong login name</string></value>
+                </member>
+                <member>
+                    <name>loginName</name>
+                    <value><string>neo</string></value>
+                </member>
+            </struct>
+        </value>
+    </fault>	
+</methodResponse>
+
+// 4: Server (service) Stopped
+<? xml version="1.0"?>
+<methodResponse>
+    <fault>
+        <value>
+            <struct>
+                <member>
+                    <name>faultCode</name>
+                    <value><i4>4</i4></value>
+                </member>
+                <member>
+                    <name>faultString</name>
+                    <value><string>Service is stopped.</string></value>
+                </member>
+            </struct>
+        </value>
+    </fault>	
+</methodResponse>
+
+// 5: Too many parametrs
+<? xml version="1.0"?>
+<methodResponse>
+    <fault>
+        <value>
+            <struct>
+                <member>
+                    <name>faultCode</name>
+                    <value><i4>1</i4></value>
+                </member>
+                <member>
+                    <name>faultString</name>
+                    <value><string>Too many parametrs.</string></value>
+                </member>
+            </struct>
+        </value>
+    </fault>	
+</methodResponse>
+
+--- Server Side Requestes ---
+// Notifications about actions/events from server :
+// Task charged
+// Update
+// Client banned
+// Server stopped
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>taskNotify</methodName>
+    <params>
+        <param>
+            <value>
+                <struct>
+                    <member>
+                        <name>ID</name>
+                        <value><string>42</string></value>
+                    </member>
+                    <member>
+                        <name>name</name>
+                        <value><string>Task #1</string></value>
+                    </member>
+                    <member>
+                        <name>desciption</name>
+                        <value><string>some description</string></value>
+                    </member>
+                    <member>
+                        <name>date</name>
+                        <value><string>2012-02-25 12:42:42</string></value>
+                    </member>
+                </struct>    
+            </value>
+        </param>
+    </params>
+</methodCall>
+
+// Client banned
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>banNotify</methodName>
+    <params>
+        <param>
+            <value>
+                <boolean>true</boolean>
+            </value>
+        </param>
+    </params>
+</methodCall>
+
+// Update
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>update</methodName>
+    <params>
+    </params>
+</methodCall>
+
+// Server stopped
+<? xml version="1.0"?>
+<methodCall>
+    <methodName>serviceStoppedNotify</methodName>
+    <params>
+        <param>
+            <value><string>reason</string></value>
+        </param>
+    </params>
+</methodCall>
+
+--- Client Side Responses, maybe server wants to know if notify-operation done successfully
+// OK
+<? xml version="1.0"?>
+<methodResponse>
+    <params>
+        <param>
+            <value><boolean>true</boolean></value>
+        </param>
+    </params>
+</methodResponse>
+
+// Error
+<? xml version="1.0"?>
+<methodResponse>
+    <fault>
+        <param>
+            <value><boolean>false</boolean></value>
+        </param>
+    </fault>
+</methodResponse>

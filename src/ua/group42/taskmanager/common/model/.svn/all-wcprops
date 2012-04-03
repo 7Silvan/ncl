@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/model
+END
+Task.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/model/Task.java
+END
+TaskState.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/model/TaskState.java
+END
+ObjectIsNotTaskException.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/model/ObjectIsNotTaskException.java
+END
+InvalidTaskException.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/model/InvalidTaskException.java
+END
+TaskComparator.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/twopals_ncl/!svn/ver/54/Task%20Manager/src/ua/group42/taskmanager/common/model/TaskComparator.java
+END

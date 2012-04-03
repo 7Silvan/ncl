@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : config.xml
+    Created on : 1 лютого 2012, 8:32
+    Author     : Silvan
+    Description:
+        Purpose of the document follows.
+-->
+<!DOCTYPE config SYSTEM "configDTD.dtd">
+<config>
+    <dao class="ua.group42.taskmanager.common.control.data.XmlDAO">
+        <userParams name="admin">
+            <param name="taskFile">.\dist\adminTasks.xml</param>
+            <param name="banned">false</param>
+        </userParams>
+        <userParams name="user1">
+            <param name="taskFile">.\dist\user1Tasks.xml</param>
+            <param name="banned">false</param>
+        </userParams>
+        <userParams name="user2">
+            <param name="taskFile">.\dist\user2Tasks.xml</param>
+            <param name="banned">true</param>
+        </userParams>
+        <userParams name="user3">
+            <param name="taskFile">.\dist\user3Tasks.xml</param>
+            <param name="banned">false</param>
+        </userParams>
+    </dao>
+    <params>
+        <param name="locale">English</param>
+        <param name="postponeMinutes">5</param>
+        <param name="dateFormat">yyyy-MM-dd HH:mm:ss</param>
+        <param name="tickTime">1000</param><!-- in millis -->
+        <param name="portWork">9000</param>
+        <param name="portStop">9001</param>
+        <param name="ipHost">127.0.0.1</param>
+    </params>
+</config>
